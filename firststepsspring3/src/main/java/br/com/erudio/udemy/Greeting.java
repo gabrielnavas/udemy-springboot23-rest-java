@@ -1,5 +1,7 @@
 package br.com.erudio.udemy;
 
+import java.util.Objects;
+
 public class Greeting {
 
     private final long id;
@@ -16,5 +18,19 @@ public class Greeting {
 
     public String getContent() {
         return content;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Greeting greeting = (Greeting) o;
+        return id == greeting.id && Objects.equals(content, greeting.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content);
     }
 }
