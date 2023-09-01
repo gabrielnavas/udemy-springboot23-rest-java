@@ -1,5 +1,6 @@
 package br.com.erudio.udemy;
 
+import br.com.erudio.udemy.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +18,21 @@ public class GreetingController {
 
     private List<Greeting> greetings = new ArrayList<>();
 
-
     @GetMapping("/greeting/{id}")
     public ResponseEntity<Object> getById(
-            @PathVariable("id") Long id
+            @PathVariable("id") String id
     ) {
+        Long greatingId = Long.valueOf(id);
         Greeting greeting = null;
         for (Greeting g : greetings) {
-            if (g.getId() == id) {
+            if (g.getId() == greatingId) {
                 greeting = g;
                 break;
             }
         }
 
         if (greeting == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, String>() {{
-                put("details", "greating not found");
-            }});
+            throw new ResourceNotFoundException("greating not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(greeting);
     }
@@ -53,13 +52,14 @@ public class GreetingController {
     @PutMapping("/greeting/{id}")
     public ResponseEntity<Object> putContent(
             @RequestBody Greeting body,
-            @PathVariable("id") Long id
+            @PathVariable("id") String id
     ) {
+        Long greetingId = Long.valueOf(id);
         int greetingIndex = -1;
         Greeting greeting = null;
         for (int i = 0; i < greetings.size(); i++) {
             System.out.println(greetings.get(i).getContent());
-            if (greetings.get(i).getId() == id) {
+            if (greetings.get(i).getId() == greetingId) {
                 greeting = greetings.get(i);
                 greetingIndex = i;
                 break;
@@ -67,9 +67,7 @@ public class GreetingController {
         }
 
         if (greeting == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, String>() {{
-                put("details", "greating not found");
-            }});
+            throw new ResourceNotFoundException("greating not found");
         }
 
         Greeting newGreeting = new Greeting(greeting.getId(), body.getContent());
@@ -82,19 +80,19 @@ public class GreetingController {
     public ResponseEntity<Object> delete(
             @PathVariable("id") Long id
     ) {
+        Long greetingId = Long.valueOf(id);
+
         Greeting greeting = null;
         for (int i = 0; i < greetings.size(); i++) {
             System.out.println(greetings.get(i).getContent());
-            if (greetings.get(i).getId() == id) {
+            if (greetings.get(i).getId() == greetingId) {
                 greeting = greetings.get(i);
                 break;
             }
         }
 
         if (greeting == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<String, String>() {{
-                put("details", "greating not found");
-            }});
+            throw new ResourceNotFoundException("greating not found");
         }
 
         greetings.remove(greeting);
