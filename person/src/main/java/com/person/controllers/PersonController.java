@@ -2,10 +2,10 @@ package com.person.controllers;
 
 import com.person.controllers.dtos.CreatePersonDto;
 import com.person.controllers.dtos.ResponsePersonBody;
-import com.person.exceptions.ObjectNotFoundException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepository;
 import com.person.services.CreatePerson;
+import com.person.services.GetPersonById;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +23,9 @@ public class PersonController {
 
     @Autowired
     private CreatePerson createPerson;
+
+    @Autowired
+    private GetPersonById getPersonById;
 
 
     @Autowired
@@ -47,14 +49,9 @@ public class PersonController {
 
     @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getById(
-            @PathVariable("personId") String personId
+            @PathVariable("personId") UUID personId
     ) {
-        Optional<Person> personFind = personRepository.getById(UUID.fromString(personId));
-        if (personFind.isEmpty()) {
-            throw new ObjectNotFoundException("person not found");
-        }
-
-        Person person = personFind.get();
+        Person person = getPersonById.execute(personId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponsePersonBody(
                 person.getId().toString(),
