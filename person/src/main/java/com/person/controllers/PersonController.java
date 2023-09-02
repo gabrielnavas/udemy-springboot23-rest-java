@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,5 +78,20 @@ public class PersonController {
                 person.getUsername(),
                 person.getEmail()
         ));
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAll() {
+        List<ResponsePersonBody> responseBody = new ArrayList<>();
+        for (Person person : personRepository.getAll()) {
+            responseBody.add(new ResponsePersonBody(
+                    person.getId().toString(),
+                    person.getFirstname(),
+                    person.getLastname(),
+                    person.getUsername(),
+                    person.getEmail()
+            ));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
 }
