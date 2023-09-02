@@ -2,6 +2,7 @@ package com.person.controllers;
 
 import com.person.controllers.dtos.RequestCreatePersonBodyDto;
 import com.person.controllers.dtos.ResponsePersonBody;
+import com.person.exceptions.ObjectAlreadyExistsWithException;
 import com.person.exceptions.ObjectNotFoundException;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
@@ -37,6 +38,16 @@ public class PersonController {
         if (!body.password().equals(body.passwordConfirmation())) {
             // TODO: Create handlers exceptions classes
             throw new PasswordAndPasswordConfirmationException();
+        }
+
+        Optional<Person> personByEmailFound = personRepository.getByEmail(body.email());
+        if (personByEmailFound.isPresent()) {
+            throw new ObjectAlreadyExistsWithException("person", "email");
+        }
+
+        Optional<Person> personByUsernameFound = personRepository.getByEmail(body.username());
+        if (personByUsernameFound.isPresent()) {
+            throw new ObjectAlreadyExistsWithException("person", "username");
         }
 
         String passwordHash = bCryptPasswordEncoder.encode(body.password());

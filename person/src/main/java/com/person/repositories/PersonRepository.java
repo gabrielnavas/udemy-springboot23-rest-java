@@ -38,6 +38,38 @@ public class PersonRepository {
         return Optional.of(person);
     }
 
+    public Optional<Person> getByEmail(String email) {
+        Person person = null;
+
+        for (Person p : data) {
+            if (p.getEmail().equals(email)) {
+                person = p;
+                break;
+            }
+        }
+
+        if (person == null) {
+            return Optional.empty();
+        }
+        return Optional.of(person);
+    }
+
+    public Optional<Person> getByUsername(String username) {
+        Person person = null;
+
+        for (Person p : data) {
+            if (p.getUsername().equals(username)) {
+                person = p;
+                break;
+            }
+        }
+
+        if (person == null) {
+            return Optional.empty();
+        }
+        return Optional.of(person);
+    }
+
     public boolean delete(Person person) {
         return data.remove(person);
     }
