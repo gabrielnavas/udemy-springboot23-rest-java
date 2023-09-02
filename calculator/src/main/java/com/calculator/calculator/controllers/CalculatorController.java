@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/calc")
 public class CalculatorController {
 
     @Autowired
@@ -25,7 +26,7 @@ public class CalculatorController {
     @Autowired
     private MathService mathService;
 
-    @PostMapping("/calc")
+    @PostMapping
     public ResponseEntity<Object> createCalculate(
             @RequestBody @Valid RequestCreateCalculate body
     ) {
@@ -45,13 +46,13 @@ public class CalculatorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(calculation);
     }
 
-    @GetMapping("/calc")
+    @GetMapping
     public ResponseEntity<Object> getAll() {
         List<Calculation> calculations = calculatorRepository.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(calculations.toArray());
     }
 
-    @GetMapping("/calc/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getById(
             @PathVariable UUID id
     ) {
