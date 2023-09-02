@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 interface MathInputMatch {
@@ -28,10 +27,11 @@ public class MathService {
     }};
 
     public Double execute(Double numberOne, Character operation, Double numberTwo) {
+        logger.info(String.format("executing calculate with number one %.2f %s %.2f", numberOne, operation, numberTwo));
         MathInputMatch func = calculateMap.get(operation);
         if (func == null) {
             OperationNotSupportedException exception = new OperationNotSupportedException();
-            logger.log(Level.INFO, exception.getMessage());
+            logger.warning(exception.getMessage());
             throw exception;
         }
 
