@@ -8,6 +8,7 @@ import com.calculator.calculator.services.MathService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class CalculatorController {
     @Autowired
     private MathService mathService;
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createCalculate(
             @RequestBody @Valid RequestCreateCalculate body
     ) {
@@ -46,13 +47,13 @@ public class CalculatorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(calculation);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAll() {
         List<Calculation> calculations = calculatorRepository.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(calculations.toArray());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getById(
             @PathVariable UUID id
     ) {
