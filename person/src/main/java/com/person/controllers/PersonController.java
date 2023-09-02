@@ -3,7 +3,6 @@ package com.person.controllers;
 import com.person.controllers.dtos.CreatePersonDto;
 import com.person.controllers.dtos.ResponsePersonBody;
 import com.person.models.Person;
-import com.person.repositories.PersonRepository;
 import com.person.services.CreatePerson;
 import com.person.services.GetAllPersons;
 import com.person.services.GetPersonById;
@@ -32,23 +31,13 @@ public class PersonController {
     @Autowired
     private GetAllPersons getAllPersons;
 
-    @Autowired
-    private PersonRepository personRepository;
-
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(
             @RequestBody @Valid CreatePersonDto bodyDto
     ) {
         Person person = createPerson.execute(bodyDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponsePersonBody(
-                person.getId().toString(),
-                person.getFirstname(),
-                person.getLastname(),
-                person.getUsername(),
-                person.getEmail()
-        ));
+        ResponsePersonBody responsePersonBody = toResponseBody(person);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBody);
     }
 
     @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +46,6 @@ public class PersonController {
     ) {
         Person person = getPersonById.execute(personId);
         ResponsePersonBody responsePersonBody = toResponseBody(person);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBody);
     }
 
