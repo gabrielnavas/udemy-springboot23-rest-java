@@ -7,6 +7,7 @@ import com.calculator.calculator.exceptions.OperationNotSupportedException;
 import com.calculator.calculator.repositories.CalculatorRepository;
 import com.calculator.calculator.services.MathService;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class CalculatorController {
 
     @PostMapping("/calc")
     public ResponseEntity<Object> createCalculate(
-            @RequestBody RequestCreateCalculate body
+            @RequestBody @Valid RequestCreateCalculate body
     ) {
         Double result = mathService.execute(body.numberOne(), body.operation().charAt(0), body.numberTwo());
 
