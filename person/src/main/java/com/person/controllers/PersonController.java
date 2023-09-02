@@ -32,7 +32,7 @@ public class PersonController {
     private GetAllPersons getAllPersons;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> create(
+    public ResponseEntity<Object> createPerson(
             @RequestBody @Valid CreatePersonDto bodyDto
     ) {
         Person person = createPerson.execute(bodyDto);
@@ -41,19 +41,19 @@ public class PersonController {
     }
 
     @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getById(
+    public ResponseEntity<Object> getByIdPerson(
             @PathVariable("personId") UUID personId
     ) {
         Person person = getPersonById.execute(personId);
         ResponsePersonBody responsePersonBody = toResponseBody(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePersonBody);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAll() {
+    public ResponseEntity<Object> getAllPersons() {
         Collection<Person> persons = getAllPersons.execute();
         Collection<ResponsePersonBody> responseBody = toResponseListBody(persons);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     private Collection<ResponsePersonBody> toResponseListBody(Collection<Person> persons) {
