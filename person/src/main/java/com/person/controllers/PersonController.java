@@ -49,6 +49,7 @@ public class PersonController {
 
         personRepository.add(person);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseCreatePersonBody(
+                person.getId().toString(),
                 person.getFirstname(),
                 person.getLastname(),
                 person.getUsername(),
