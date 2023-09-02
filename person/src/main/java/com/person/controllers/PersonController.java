@@ -1,13 +1,11 @@
 package com.person.controllers;
 
-import com.person.controllers.dtos.RequestCreatePersonBodyDto;
+import com.person.controllers.dtos.CreatePersonDto;
 import com.person.controllers.dtos.ResponsePersonBody;
-import com.person.exceptions.ObjectAlreadyExistsWithException;
 import com.person.exceptions.ObjectNotFoundException;
-import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepository;
-import com.person.services.PasswordEncoderBCrypt;
+import com.person.services.CreatePerson;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,43 +23,19 @@ import java.util.UUID;
 public class PersonController {
 
     @Autowired
-    private PersonRepository personRepository;
+    private CreatePerson createPerson;
+
 
     @Autowired
-    private PasswordEncoderBCrypt bCryptPasswordEncoder;
+    private PersonRepository personRepository;
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(
-            @RequestBody @Valid RequestCreatePersonBodyDto body
+            @RequestBody @Valid CreatePersonDto bodyDto
     ) {
+        Person person = createPerson.execute(bodyDto);
 
-        if (!body.password().equals(body.passwordConfirmation())) {
-            // TODO: Create handlers exceptions classes
-            throw new PasswordAndPasswordConfirmationException();
-        }
-
-        Optional<Person> personByEmailFound = personRepository.getByEmail(body.email());
-        if (personByEmailFound.isPresent()) {
-            throw new ObjectAlreadyExistsWithException("person", "email");
-        }
-
-        Optional<Person> personByUsernameFound = personRepository.getByEmail(body.username());
-        if (personByUsernameFound.isPresent()) {
-            throw new ObjectAlreadyExistsWithException("person", "username");
-        }
-
-        String passwordHash = bCryptPasswordEncoder.encode(body.password());
-
-        Person person = new Person(
-                UUID.randomUUID(),
-                body.firstname(),
-                body.lastname(),
-                body.username(),
-                body.email(),
-                passwordHash
-        );
-
-        personRepository.add(person);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponsePersonBody(
                 person.getId().toString(),
                 person.getFirstname(),
