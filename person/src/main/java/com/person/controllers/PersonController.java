@@ -1,7 +1,8 @@
 package com.person.controllers;
 
 import com.person.controllers.dtos.RequestCreatePersonBodyDto;
-import com.person.controllers.dtos.ResponseCreatePersonBody;
+import com.person.controllers.dtos.ResponsePersonBody;
+import com.person.exceptions.ObjectNotFoundException;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepository;
@@ -11,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -50,7 +49,27 @@ public class PersonController {
         );
 
         personRepository.add(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseCreatePersonBody(
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponsePersonBody(
+                person.getId().toString(),
+                person.getFirstname(),
+                person.getLastname(),
+                person.getUsername(),
+                person.getEmail()
+        ));
+    }
+
+    @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getById(
+            @PathVariable("personId") String personId
+    ) {
+        Optional<Person> personFind = personRepository.getById(UUID.fromString(personId));
+        if (personFind.isEmpty()) {
+            throw new ObjectNotFoundException("person not found");
+        }
+
+        Person person = personFind.get();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponsePersonBody(
                 person.getId().toString(),
                 person.getFirstname(),
                 person.getLastname(),

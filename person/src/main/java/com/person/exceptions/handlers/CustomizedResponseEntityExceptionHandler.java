@@ -1,6 +1,7 @@
 package com.person.exceptions.handlers;
 
 import com.person.exceptions.ExceptionResponse;
+import com.person.exceptions.ObjectNotFoundException;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
-    @ExceptionHandler(PasswordAndPasswordConfirmationException.class)
+
+    @ExceptionHandler({
+            PasswordAndPasswordConfirmationException.class,
+            ObjectNotFoundException.class
+    })
     public final ResponseEntity<ExceptionResponse> handlePasswordAndPasswordConfirmationExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),

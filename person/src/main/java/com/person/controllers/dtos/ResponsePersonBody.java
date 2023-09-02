@@ -1,6 +1,6 @@
 package com.person.controllers.dtos;
 
-public record ResponseCreatePersonBody(
+public record ResponsePersonBody(
         String id,
         String firstname,
         String lastname,
