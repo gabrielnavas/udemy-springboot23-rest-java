@@ -27,7 +27,7 @@ public class CalculatorController {
     @Autowired
     private MathService mathService;
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createCalculate(
             @RequestBody @Valid RequestCreateCalculate body
     ) {
