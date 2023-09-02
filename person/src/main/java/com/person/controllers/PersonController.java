@@ -5,12 +5,12 @@ import com.person.controllers.dtos.ResponseCreatePersonBody;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepository;
+import com.person.services.PasswordEncoderBCrypt;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +22,11 @@ import java.util.UUID;
 @RequestMapping(value = "/person")
 public class PersonController {
 
-
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private PasswordEncoderBCrypt bCryptPasswordEncoder;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(
@@ -36,7 +38,7 @@ public class PersonController {
             throw new PasswordAndPasswordConfirmationException();
         }
 
-        String passwordHash = BCrypt.hashpw(body.password(), BCrypt.gensalt());
+        String passwordHash = bCryptPasswordEncoder.encode(body.password());
 
         Person person = new Person(
                 UUID.randomUUID(),
