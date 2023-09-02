@@ -2,15 +2,22 @@ package com.calculator.calculator.services;
 
 import com.calculator.calculator.exceptions.DivisionZeroException;
 import com.calculator.calculator.exceptions.OperationNotSupportedException;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 interface MathInputMatch {
     Double apply(Double numberOne, Double numberTwo);
 }
 
+@Service
 public class MathService {
+
+
+    private final Logger logger = Logger.getLogger(MathService.class.getName());
 
     private final Map<Character, MathInputMatch> calculateMap = new HashMap<>() {{
         put('+', MathService.this::sum);
@@ -22,8 +29,10 @@ public class MathService {
 
     public Double execute(Double numberOne, Character operation, Double numberTwo) {
         MathInputMatch func = calculateMap.get(operation);
-        if(func == null) {
-            throw new OperationNotSupportedException();
+        if (func == null) {
+            OperationNotSupportedException exception = new OperationNotSupportedException();
+            logger.log(Level.INFO, exception.getMessage());
+            throw exception;
         }
 
         return func.apply(numberOne, numberTwo);
@@ -42,14 +51,14 @@ public class MathService {
     }
 
     private Double division(Double numberOne, Double numberTwo) {
-        if(numberTwo == Double.parseDouble("0")) {
+        if (numberTwo == Double.parseDouble("0")) {
             throw new DivisionZeroException();
         }
         return numberOne / numberTwo;
     }
 
     private Double rest(Double numberOne, Double numberTwo) {
-        if(numberTwo == Double.parseDouble("0")) {
+        if (numberTwo == Double.parseDouble("0")) {
             throw new DivisionZeroException();
         }
         return numberOne % numberTwo;

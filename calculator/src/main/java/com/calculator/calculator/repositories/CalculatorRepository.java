@@ -1,13 +1,14 @@
 package com.calculator.calculator.repositories;
 
 import com.calculator.calculator.models.Calculation;
-import jdk.dynalink.Operation;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 public class CalculatorRepository {
 
-    private Map<UUID, Calculation> data = new HashMap<>();
+    private final Map<UUID, Calculation> data = new HashMap<>();
 
     public void create(Calculation calculation) {
         this.data.put(calculation.getId(), calculation);
@@ -19,7 +20,7 @@ public class CalculatorRepository {
 
     public Optional<Calculation> getById(UUID id) {
         Calculation calculation = this.data.get(id);
-        if(calculation == null) {
+        if (calculation == null) {
             return Optional.empty();
         }
         return Optional.of(calculation);
