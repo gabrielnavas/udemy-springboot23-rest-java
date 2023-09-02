@@ -1,8 +1,8 @@
 package com.person.exceptions.handlers;
 
-import com.person.exceptions.ExceptionResponse;
 import com.person.exceptions.ObjectNotFoundException;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
+import com.person.exceptions.responses.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

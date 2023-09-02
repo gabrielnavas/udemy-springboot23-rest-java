@@ -1,4 +1,4 @@
-package com.person.exceptions;
+package com.person.exceptions.responses;
 
 import java.util.Date;
 
