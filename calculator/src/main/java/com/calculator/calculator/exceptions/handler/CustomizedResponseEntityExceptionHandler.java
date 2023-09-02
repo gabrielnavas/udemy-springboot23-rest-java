@@ -20,9 +20,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-            new Date(),
-            ex.getMessage(),
-            request.getDescription(false)
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
     }
@@ -46,5 +46,4 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
-
 }
