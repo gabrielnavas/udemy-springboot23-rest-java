@@ -7,15 +7,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Component
 public class PersonRepository {
 
-    private final List<Person> data = new ArrayList<>();
+    private List<Person> data = new ArrayList<>();
 
-    public boolean add(Person person) {
+    public void save(Person person) {
         data.add(person);
-        return true;
+    }
+
+    public void updatePartials(UUID id, Person person) {
+        person.setId(id);
+        Function<Person, Person> findAndUpdate = personMap -> personMap.getId().compareTo(id) == 0
+                ? person
+                : personMap;
+        data = data.stream()
+                .map(findAndUpdate)
+                .toList();
     }
 
     public List<Person> getAll() {
@@ -70,31 +80,7 @@ public class PersonRepository {
         return Optional.of(person);
     }
 
-    public boolean delete(Person person) {
-        return data.remove(person);
+    public void delete(Person person) {
+        data.remove(person);
     }
-
-    public boolean updateById(UUID id, Person person) {
-        boolean updated = true;
-
-        int indexPerson = data.indexOf(person);
-
-        if (indexPerson == -1) {
-            return updated = false;
-        } else {
-            Person personUpdated = new Person(
-                    id,
-                    person.getFirstname(),
-                    person.getLastname(),
-                    person.getUsername(),
-                    person.getPassword(),
-                    person.getEmail()
-            );
-
-            data.add(indexPerson, personUpdated);
-        }
-
-        return updated;
-    }
-
 }

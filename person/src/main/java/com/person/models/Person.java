@@ -1,14 +1,19 @@
 package com.person.models;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Person {
-    private final UUID id;
-    private final String firstname;
-    private final String lastname;
-    private final String username;
-    private final String password;
-    private final String email;
+    private UUID id;
+    private String firstname;
+    private String lastname;
+    private String username;
+    private String password;
+    private String email;
+
+    public Person() {
+        this(UUID.randomUUID(), "", "", "", "", "");
+    }
 
     public Person(UUID id, String firstname, String lastname, String username, String email, String password) {
         this.id = id;
@@ -41,5 +46,42 @@ public class Person {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return person.getId().compareTo(getId()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstname, lastname, username, password, email);
     }
 }

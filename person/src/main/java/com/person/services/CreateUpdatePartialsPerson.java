@@ -1,8 +1,6 @@
 package com.person.services;
 
-import com.person.controllers.dtos.CreatePersonDto;
 import com.person.exceptions.ObjectAlreadyExistsWithException;
-import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
-public class CreatePerson {
+public class CreateUpdatePartialsPerson {
 
     @Autowired
     private PersonRepository personRepository;
@@ -22,41 +20,49 @@ public class CreatePerson {
     @Autowired
     private PasswordEncoderBCrypt bCryptPasswordEncoder;
 
-    private final Logger logger = Logger.getLogger(CreatePerson.class.getName());
 
-    public Person execute(CreatePersonDto data) {
+    private final Logger logger = Logger.getLogger(CreateUpdatePartialsPerson.class.getName());
+
+
+    public Person create(Person person) {
         logger.info(String.format("%s - %s", new Date().toString(), "create a person"));
 
-        if (!data.password().equals(data.passwordConfirmation())) {
-            throw new PasswordAndPasswordConfirmationException();
-        }
+        checkDuplicatedPerson(person);
 
-        Optional<Person> personByEmailFound = personRepository.getByEmail(data.email());
+        String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
+        person.setPassword(passwordHash);
+
+        personRepository.save(person);
+        return person;
+    }
+
+
+    public void updatePartialsPerson(UUID id, Person person) {
+        logger.info(String.format("%s - %s", new Date().toString(), "update a person"));
+        checkDuplicatedPerson(person);
+
+        String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
+        person.setPassword(passwordHash);
+        personRepository.updatePartials(id, person);
+    }
+
+    private void checkDuplicatedPerson(Person person) {
+        Optional<Person> personByEmailFound = personRepository.getByEmail(person.getEmail());
         if (personByEmailFound.isPresent()) {
             var exception = new ObjectAlreadyExistsWithException("person", "email");
             logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
             throw exception;
         }
 
-        Optional<Person> personByUsernameFound = personRepository.getByUsername(data.username());
+        Optional<Person> personByUsernameFound = personRepository.getByUsername(person.getUsername());
         if (personByUsernameFound.isPresent()) {
             var exception = new ObjectAlreadyExistsWithException("person", "username");
             logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
             throw exception;
         }
+    }
 
-        String passwordHash = bCryptPasswordEncoder.encode(data.password());
+    private void verifyPasswords(Person person) {
 
-        Person person = new Person(
-                UUID.randomUUID(),
-                data.firstname(),
-                data.lastname(),
-                data.username(),
-                data.email(),
-                passwordHash
-        );
-
-        personRepository.add(person);
-        return person;
     }
 }
