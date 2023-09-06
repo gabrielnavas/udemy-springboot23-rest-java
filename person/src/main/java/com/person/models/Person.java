@@ -1,14 +1,28 @@
 package com.person.models;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "TB_PERSON")
 public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false, length = 50)
     private String firstname;
+
+    @Column(nullable = false, length = 20)
     private String lastname;
+    @Column(nullable = false, unique = true, length = 20)
     private String username;
+    @Column(nullable = false, length = 100)
     private String password;
+    @Column(nullable = false, unique = true)
     private String email;
 
     public Person() {
