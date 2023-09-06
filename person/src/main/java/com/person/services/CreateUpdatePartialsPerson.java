@@ -3,7 +3,6 @@ package com.person.services;
 import com.person.exceptions.ObjectAlreadyExistsWithException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepositoryJpa;
-import com.person.repositories.PersonRepositoryMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +13,6 @@ import java.util.logging.Logger;
 
 @Service
 public class CreateUpdatePartialsPerson {
-
-    @Autowired
-    private PersonRepositoryMemory personRepositoryMemory;
 
     @Autowired
     private PersonRepositoryJpa personRepository;
@@ -47,7 +43,8 @@ public class CreateUpdatePartialsPerson {
 
         String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(passwordHash);
-        personRepositoryMemory.updatePartials(id, person);
+        person.setId(id);
+        personRepository.save(person);
     }
 
     private void checkDuplicatedPerson(Person person) {
