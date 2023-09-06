@@ -2,7 +2,8 @@ package com.person.services;
 
 import com.person.exceptions.ObjectAlreadyExistsWithException;
 import com.person.models.Person;
-import com.person.repositories.PersonRepository;
+import com.person.repositories.PersonRepositoryJpa;
+import com.person.repositories.PersonRepositoryMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,10 @@ import java.util.logging.Logger;
 public class CreateUpdatePartialsPerson {
 
     @Autowired
-    private PersonRepository personRepository;
+    private PersonRepositoryMemory personRepositoryMemory;
+
+    @Autowired
+    private PersonRepositoryJpa personRepository;
 
     @Autowired
     private PasswordEncoderBCrypt bCryptPasswordEncoder;
@@ -43,26 +47,23 @@ public class CreateUpdatePartialsPerson {
 
         String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(passwordHash);
-        personRepository.updatePartials(id, person);
+        personRepositoryMemory.updatePartials(id, person);
     }
 
     private void checkDuplicatedPerson(Person person) {
-        Optional<Person> personByEmailFound = personRepository.getByEmail(person.getEmail());
+
+        Optional<Person> personByEmailFound = personRepository.findByEmail(person.getEmail());
         if (personByEmailFound.isPresent()) {
             var exception = new ObjectAlreadyExistsWithException("person", "email");
             logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
             throw exception;
         }
 
-        Optional<Person> personByUsernameFound = personRepository.getByUsername(person.getUsername());
+        Optional<Person> personByUsernameFound = personRepository.findByUsername(person.getUsername());
         if (personByUsernameFound.isPresent()) {
             var exception = new ObjectAlreadyExistsWithException("person", "username");
             logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
             throw exception;
         }
-    }
-
-    private void verifyPasswords(Person person) {
-
     }
 }
