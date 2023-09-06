@@ -2,7 +2,7 @@ package com.person.services;
 
 import com.person.exceptions.ObjectNotFoundException;
 import com.person.models.Person;
-import com.person.repositories.PersonRepository;
+import com.person.repositories.PersonRepositoryMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class DeletePerson {
 
     @Autowired
-    private PersonRepository personRepository;
+    private PersonRepositoryMemory personRepository;
 
     public void execute(UUID id) {
         Optional<Person> optionalPerson = personRepository.getById(id);
