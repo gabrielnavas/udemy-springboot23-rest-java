@@ -31,7 +31,7 @@ public class CreateUpdatePartialsPerson {
         String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(passwordHash);
 
-        personRepository.save(person);
+        person = personRepository.save(person);
         return person;
     }
 
