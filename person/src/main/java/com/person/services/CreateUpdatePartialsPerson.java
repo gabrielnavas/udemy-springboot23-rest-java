@@ -51,7 +51,7 @@ public class CreateUpdatePartialsPerson {
         boolean alreadyExistOtherPersonWithEmail = personByEmailFound.isPresent() && personByEmailFound.get().getId().compareTo(person.getId()) != 0;
         if (alreadyExistOtherPersonWithEmail) {
             var exception = new ObjectAlreadyExistsWithException("person", "email");
-            logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
+            logger.info(String.format("%s - %s", new Date(), exception.getMessage()));
             throw exception;
         }
 
@@ -59,7 +59,7 @@ public class CreateUpdatePartialsPerson {
         boolean alreadyExistsOtherPersonWithUsername = personByUsernameFound.isPresent() && personByEmailFound.get().getId().compareTo(person.getId()) != 0;
         if (alreadyExistsOtherPersonWithUsername) {
             var exception = new ObjectAlreadyExistsWithException("person", "username");
-            logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
+            logger.info(String.format("%s - %s", new Date(), exception.getMessage()));
             throw exception;
         }
     }
