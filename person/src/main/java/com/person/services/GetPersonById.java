@@ -6,7 +6,6 @@ import com.person.repositories.PersonRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -17,11 +16,7 @@ public class GetPersonById {
     private PersonRepositoryJpa personRepository;
 
     public Person execute(UUID personId) {
-        Optional<Person> personFind = personRepository.findById(personId);
-        if (personFind.isEmpty()) {
-            throw new ObjectNotFoundException("person not found");
-        }
-
-        return personFind.get();
+        return personRepository.findById(personId)
+                .orElseThrow(() -> new ObjectNotFoundException("person not found"));
     }
 }
