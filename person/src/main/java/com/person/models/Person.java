@@ -2,6 +2,7 @@ package com.person.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -25,17 +26,21 @@ public class Person {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     public Person() {
-        this(UUID.randomUUID(), "", "", "", "", "");
+        this(UUID.randomUUID(), "", "", "", "", "", LocalDateTime.now());
     }
 
-    public Person(UUID id, String firstname, String lastname, String username, String email, String password) {
+    public Person(UUID id, String firstname, String lastname, String username, String email, String password, LocalDateTime createdAt) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.createdAt = createdAt;
     }
 
     public UUID getId() {
@@ -62,6 +67,10 @@ public class Person {
         return email;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -86,16 +95,20 @@ public class Person {
         this.email = email;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return person.getId().compareTo(getId()) == 0;
+        return Objects.equals(id, person.id) && Objects.equals(firstname, person.firstname) && Objects.equals(lastname, person.lastname) && Objects.equals(username, person.username) && Objects.equals(password, person.password) && Objects.equals(email, person.email) && Objects.equals(createdAt, person.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, username, password, email);
+        return Objects.hash(id, firstname, lastname, username, password, email, createdAt);
     }
 }
