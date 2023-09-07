@@ -3,6 +3,7 @@ package com.person.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class Person {
     private LocalDateTime createdAt;
 
     public Person() {
-        this(UUID.randomUUID(), "", "", "", "", "", LocalDateTime.now());
+        this(UUID.randomUUID(), "", "", "", "", "", LocalDateTime.now(ZoneOffset.UTC));
     }
 
     public Person(UUID id, String firstname, String lastname, String username, String email, String password, LocalDateTime createdAt) {
