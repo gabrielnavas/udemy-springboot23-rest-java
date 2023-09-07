@@ -6,7 +6,6 @@ import com.person.repositories.PersonRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,10 +15,8 @@ public class DeletePerson {
     private PersonRepositoryJpa personRepository;
 
     public void execute(UUID personId) {
-        Optional<Person> optionalPerson = personRepository.findById(personId);
-        if (optionalPerson.isEmpty()) {
-            throw new ObjectNotFoundException("person not found on delete");
-        }
-        personRepository.delete(optionalPerson.get());
+        Person person = personRepository.findById(personId)
+                .orElseThrow(() -> new ObjectNotFoundException("person not found"));
+        personRepository.delete(person);
     }
 }
