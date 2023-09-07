@@ -11,6 +11,8 @@ import com.person.services.GetPersonById;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,9 +66,14 @@ public class PersonController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllPersons() {
-        Collection<Person> persons = getAllPersons.execute();
-        Collection<ResponsePersonBody> responseBody = toResponseListBody(persons);
+    public ResponseEntity<Object> getAllPersons(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            Pageable pageable
+    ) {
+        Page<Person> personsPages = getAllPersons.execute(pageable);
+        Collection<ResponsePersonBody> responseBody = toResponseListBody(personsPages.stream().toList());
+
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
@@ -109,7 +116,8 @@ public class PersonController {
                 person.getFirstname(),
                 person.getLastname(),
                 person.getUsername(),
-                person.getEmail()
+                person.getEmail(),
+                person.getCreatedAt()
         );
     }
 }
