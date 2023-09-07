@@ -30,11 +30,15 @@ public class Person {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updateAt;
+
     public Person() {
-        this(UUID.randomUUID(), "", "", "", "", "", LocalDateTime.now(ZoneOffset.UTC));
+        this(UUID.randomUUID(), "", "", "", "", "", LocalDateTime.now(ZoneOffset.UTC), LocalDateTime.now(ZoneOffset.UTC));
     }
 
-    public Person(UUID id, String firstname, String lastname, String username, String email, String password, LocalDateTime createdAt) {
+    public Person(UUID id, String firstname, String lastname, String username, String email, String password, LocalDateTime createdAt, LocalDateTime updateAt) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -42,6 +46,7 @@ public class Person {
         this.password = password;
         this.email = email;
         this.createdAt = createdAt;
+        this.updateAt = updateAt;
     }
 
     public UUID getId() {
@@ -76,28 +81,9 @@ public class Person {
         this.id = id;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     @Override
@@ -105,11 +91,11 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstname, person.firstname) && Objects.equals(lastname, person.lastname) && Objects.equals(username, person.username) && Objects.equals(password, person.password) && Objects.equals(email, person.email) && Objects.equals(createdAt, person.createdAt);
+        return Objects.equals(id, person.id) && Objects.equals(firstname, person.firstname) && Objects.equals(lastname, person.lastname) && Objects.equals(username, person.username) && Objects.equals(password, person.password) && Objects.equals(email, person.email) && Objects.equals(createdAt, person.createdAt) && Objects.equals(updateAt, person.updateAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, username, password, email, createdAt);
+        return Objects.hash(id, firstname, lastname, username, password, email, createdAt, updateAt);
     }
 }
