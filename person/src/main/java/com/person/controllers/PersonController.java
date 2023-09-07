@@ -88,8 +88,9 @@ public class PersonController {
         }
 
         Person person = new Person();
+        person.setId(personId);
         BeanUtils.copyProperties(bodyDto, person);
-        createUpdatePartialsPerson.updatePartialsPerson(personId, person);
+        createUpdatePartialsPerson.updatePartialsPerson(person);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

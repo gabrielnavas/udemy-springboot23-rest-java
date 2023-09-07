@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
@@ -37,27 +36,28 @@ public class CreateUpdatePartialsPerson {
     }
 
 
-    public void updatePartialsPerson(UUID id, Person person) {
+    public void updatePartialsPerson(Person person) {
         logger.info(String.format("%s - %s", new Date().toString(), "update a person"));
         checkDuplicatedPerson(person);
 
         String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(passwordHash);
-        person.setId(id);
         personRepository.save(person);
     }
 
     private void checkDuplicatedPerson(Person person) {
 
         Optional<Person> personByEmailFound = personRepository.findByEmail(person.getEmail());
-        if (personByEmailFound.isPresent()) {
+        boolean alreadyExistOtherPersonWithEmail = personByEmailFound.isPresent() && personByEmailFound.get().getId().compareTo(person.getId()) != 0;
+        if (alreadyExistOtherPersonWithEmail) {
             var exception = new ObjectAlreadyExistsWithException("person", "email");
             logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
             throw exception;
         }
 
         Optional<Person> personByUsernameFound = personRepository.findByUsername(person.getUsername());
-        if (personByUsernameFound.isPresent()) {
+        boolean alreadyExistsOtherPersonWithUsername = personByUsernameFound.isPresent() && personByEmailFound.get().getId().compareTo(person.getId()) != 0;
+        if (alreadyExistsOtherPersonWithUsername) {
             var exception = new ObjectAlreadyExistsWithException("person", "username");
             logger.info(String.format("%s - %s", new Date().toString(), exception.getMessage()));
             throw exception;
