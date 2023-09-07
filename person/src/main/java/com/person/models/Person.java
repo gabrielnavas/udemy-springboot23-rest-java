@@ -14,10 +14,10 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstname;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "last_name", nullable = false, length = 20)
     private String lastname;
     @Column(nullable = false, unique = true, length = 20)
     private String username;
@@ -26,7 +26,7 @@ public class Person {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     public Person() {
