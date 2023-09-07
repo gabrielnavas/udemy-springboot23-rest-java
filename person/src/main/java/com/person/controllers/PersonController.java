@@ -117,7 +117,8 @@ public class PersonController {
                 person.getLastname(),
                 person.getUsername(),
                 person.getEmail(),
-                person.getCreatedAt()
+                person.getCreatedAt(),
+                person.getUpdateAt()
         );
     }
 }

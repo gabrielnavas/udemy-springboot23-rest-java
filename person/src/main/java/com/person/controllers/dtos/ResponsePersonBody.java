@@ -8,6 +8,7 @@ public record ResponsePersonBody(
         String lastname,
         String username,
         String email,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }
