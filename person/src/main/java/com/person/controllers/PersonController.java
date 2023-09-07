@@ -97,7 +97,7 @@ public class PersonController {
 
     private Collection<ResponsePersonBody> toResponseListBody(Collection<Person> persons) {
         List<ResponsePersonBody> responseBody = new ArrayList<>();
-        for (Person person : getAllPersons.execute()) {
+        for (Person person : persons) {
             responseBody.add(toResponseBody(person));
         }
         return responseBody;
