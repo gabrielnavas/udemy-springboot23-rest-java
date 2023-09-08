@@ -6,12 +6,12 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class MediaTypeConfigurer implements WebMvcConfigurer {
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-//        configureContentNegotiationViaParam(configurer);
-        configureContentNegotiationViaHeader(configurer);
+//        configureContentNegotiationViaParam(configurer); // para usar via param
+        configureContentNegotiationViaHeader(configurer); // para usar via header
     }
 
 
@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .parameterName("mediaType") // name of the param
                 .ignoreAcceptHeader(true) // ignore param on the header
                 .useRegisteredExtensionsOnly(false)
-                .defaultContentType(MediaType.APPLICATION_JSON) // uses as default
+                .defaultContentType(org.springframework.http.MediaType.APPLICATION_JSON) // uses as default
                 .mediaType("json", MediaType.APPLICATION_JSON) // accept json
                 .mediaType("xml", MediaType.APPLICATION_XML); // accept xml
     }
@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         configurer.favorParameter(false) // accept param
                 .ignoreAcceptHeader(false) // ignore param on the header
                 .useRegisteredExtensionsOnly(false)
-                .defaultContentType(MediaType.APPLICATION_JSON) // uses as default
+                .defaultContentType(org.springframework.http.MediaType.APPLICATION_JSON) // uses as default
                 .mediaType("json", MediaType.APPLICATION_JSON) // accept json
                 .mediaType("xml", MediaType.APPLICATION_XML); // accept xml
     }

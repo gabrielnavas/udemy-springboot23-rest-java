@@ -40,7 +40,16 @@ public class PersonController {
     private DeletePerson deletePerson;
 
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            consumes = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE
+            },
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE
+            }
+    )
     public ResponseEntity<Object> createPerson(
             @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
     ) {
@@ -56,7 +65,13 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonDto);
     }
 
-    @GetMapping(value = "/{personId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(
+            value = "/{personId}",
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE
+            }
+    )
     public ResponseEntity<Object> getByIdPerson(
             @PathVariable("personId") UUID personId
     ) {
@@ -65,7 +80,12 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePersonDto);
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE
+            }
+    )
     public ResponseEntity<Object> getAllPersons(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -87,8 +107,14 @@ public class PersonController {
 
     @PatchMapping(
             value = "/{personId}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+            consumes = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+            },
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+            }
     )
     public ResponseEntity<Object> updatePartialsPerson(
             @PathVariable("personId") UUID personId,
