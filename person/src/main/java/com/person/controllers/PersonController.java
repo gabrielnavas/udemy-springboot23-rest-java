@@ -40,7 +40,7 @@ public class PersonController {
     private DeletePerson deletePerson;
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/v1", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createPerson(
             @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
     ) {
@@ -56,7 +56,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBodyDto);
     }
 
-    @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v1/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getByIdPerson(
             @PathVariable("personId") UUID personId
     ) {
@@ -65,7 +65,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePersonBodyDto);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v1", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllPersons(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -77,7 +77,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
-    @DeleteMapping(value = "/{personId}")
+    @DeleteMapping(value = "/v1/{personId}")
     public ResponseEntity<Object> deletePerson(
             @PathVariable("personId") UUID personId
     ) {
@@ -85,7 +85,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PatchMapping(value = "/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/v1/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updatePartialsPerson(
             @PathVariable("personId") UUID personId,
             @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
