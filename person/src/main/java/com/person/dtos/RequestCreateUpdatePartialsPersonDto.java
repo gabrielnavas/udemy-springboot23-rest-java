@@ -1,5 +1,6 @@
 package com.person.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -10,10 +11,12 @@ public record RequestCreateUpdatePartialsPersonDto(
 
         @Length(min = 1, max = 50)
         @NotNull
+        @JsonProperty(value = "first_name")
         String firstname,
 
         @Length(min = 1, max = 25)
         @NotNull
+        @JsonProperty(value = "last_name")
         String lastname,
 
         Date birthday,
@@ -32,6 +35,7 @@ public record RequestCreateUpdatePartialsPersonDto(
 
         @Length(min = 8, max = 50)
         @NotNull
+        @JsonProperty(value = "password_confirmation")
         String passwordConfirmation
 ) {
 }
