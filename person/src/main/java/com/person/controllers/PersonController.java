@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping(value = "/person/v1")
 public class PersonController {
@@ -77,6 +80,10 @@ public class PersonController {
     ) {
         Person person = getPersonById.execute(personId);
         ResponsePersonDto responsePersonDto = toResponseBody(person);
+
+        // add the hateoas
+        responsePersonDto.add(linkTo(methodOn(PersonController.class).getByIdPerson(personId)).withSelfRel());
+
         return ResponseEntity.status(HttpStatus.OK).body(responsePersonDto);
     }
 
