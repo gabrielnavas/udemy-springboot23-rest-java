@@ -1,7 +1,7 @@
 package com.person.controllers;
 
-import com.person.controllers.dtos.CreateUpdatePartialsPersonDto;
-import com.person.controllers.dtos.ResponsePersonBody;
+import com.person.controllers.dtos.v1.CreateUpdatePartialsPersonDto;
+import com.person.controllers.dtos.v1.ResponsePersonBodyDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;
@@ -52,8 +52,8 @@ public class PersonController {
         BeanUtils.copyProperties(bodyDto, person);
 
         person = createUpdatePartialsPerson.create(person);
-        ResponsePersonBody responsePersonBody = toResponseBody(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBody);
+        ResponsePersonBodyDto responsePersonBodyDto = toResponseBody(person);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBodyDto);
     }
 
     @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,8 +61,8 @@ public class PersonController {
             @PathVariable("personId") UUID personId
     ) {
         Person person = getPersonById.execute(personId);
-        ResponsePersonBody responsePersonBody = toResponseBody(person);
-        return ResponseEntity.status(HttpStatus.OK).body(responsePersonBody);
+        ResponsePersonBodyDto responsePersonBodyDto = toResponseBody(person);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePersonBodyDto);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,7 +72,7 @@ public class PersonController {
             Pageable pageable
     ) {
         Page<Person> personsPages = getAllPersons.execute(pageable);
-        Collection<ResponsePersonBody> responseBody = toResponseListBody(personsPages.stream().toList());
+        Collection<ResponsePersonBodyDto> responseBody = toResponseListBody(personsPages.stream().toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
@@ -102,16 +102,16 @@ public class PersonController {
     }
 
 
-    private Collection<ResponsePersonBody> toResponseListBody(Collection<Person> persons) {
-        List<ResponsePersonBody> responseBody = new ArrayList<>();
+    private Collection<ResponsePersonBodyDto> toResponseListBody(Collection<Person> persons) {
+        List<ResponsePersonBodyDto> responseBody = new ArrayList<>();
         for (Person person : persons) {
             responseBody.add(toResponseBody(person));
         }
         return responseBody;
     }
 
-    private ResponsePersonBody toResponseBody(Person person) {
-        return new ResponsePersonBody(
+    private ResponsePersonBodyDto toResponseBody(Person person) {
+        return new ResponsePersonBodyDto(
                 person.getId().toString(),
                 person.getFirstname(),
                 person.getLastname(),

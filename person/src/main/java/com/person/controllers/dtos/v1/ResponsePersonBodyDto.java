@@ -1,8 +1,8 @@
-package com.person.controllers.dtos;
+package com.person.controllers.dtos.v1;
 
 import java.time.LocalDateTime;
 
-public record ResponsePersonBody(
+public record ResponsePersonBodyDto(
         String id,
         String firstname,
         String lastname,
