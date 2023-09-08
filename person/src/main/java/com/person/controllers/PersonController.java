@@ -1,7 +1,7 @@
 package com.person.controllers;
 
-import com.person.controllers.dtos.CreateUpdatePartialsPersonDto;
-import com.person.controllers.dtos.ResponsePersonBodyDto;
+import com.person.controllers.dtos.RequestCreateUpdatePartialsPersonDto;
+import com.person.controllers.dtos.ResponsePersonDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;
@@ -42,7 +42,7 @@ public class PersonController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createPerson(
-            @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
+            @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
     ) {
         if (!bodyDto.password().equals(bodyDto.passwordConfirmation())) {
             throw new PasswordAndPasswordConfirmationException();
@@ -52,8 +52,8 @@ public class PersonController {
         BeanUtils.copyProperties(bodyDto, person);
 
         person = createUpdatePartialsPerson.create(person);
-        ResponsePersonBodyDto responsePersonBodyDto = toResponseBody(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBodyDto);
+        ResponsePersonDto responsePersonDto = toResponseBody(person);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonDto);
     }
 
     @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,8 +61,8 @@ public class PersonController {
             @PathVariable("personId") UUID personId
     ) {
         Person person = getPersonById.execute(personId);
-        ResponsePersonBodyDto responsePersonBodyDto = toResponseBody(person);
-        return ResponseEntity.status(HttpStatus.OK).body(responsePersonBodyDto);
+        ResponsePersonDto responsePersonDto = toResponseBody(person);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePersonDto);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,7 +72,7 @@ public class PersonController {
             Pageable pageable
     ) {
         Page<Person> personsPages = getAllPersons.execute(pageable);
-        Collection<ResponsePersonBodyDto> responseBody = toResponseListBody(personsPages.stream().toList());
+        Collection<ResponsePersonDto> responseBody = toResponseListBody(personsPages.stream().toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
@@ -88,7 +88,7 @@ public class PersonController {
     @PatchMapping(value = "/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updatePartialsPerson(
             @PathVariable("personId") UUID personId,
-            @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
+            @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
     ) {
         if (!bodyDto.password().equals(bodyDto.passwordConfirmation())) {
             throw new PasswordAndPasswordConfirmationException();
@@ -101,16 +101,16 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    private Collection<ResponsePersonBodyDto> toResponseListBody(Collection<Person> persons) {
-        List<ResponsePersonBodyDto> responseBody = new ArrayList<>();
+    private Collection<ResponsePersonDto> toResponseListBody(Collection<Person> persons) {
+        List<ResponsePersonDto> responseBody = new ArrayList<>();
         for (Person person : persons) {
             responseBody.add(toResponseBody(person));
         }
         return responseBody;
     }
 
-    private ResponsePersonBodyDto toResponseBody(Person person) {
-        return new ResponsePersonBodyDto(
+    private ResponsePersonDto toResponseBody(Person person) {
+        return new ResponsePersonDto(
                 person.getId().toString(),
                 person.getFirstname(),
                 person.getLastname(),
