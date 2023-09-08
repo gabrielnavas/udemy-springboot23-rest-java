@@ -1,6 +1,7 @@
 package com.person.services;
 
 import com.person.exceptions.ObjectAlreadyExistsWithException;
+import com.person.exceptions.ObjectNotFoundException;
 import com.person.models.Person;
 import com.person.repositories.PersonRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,10 @@ public class CreateUpdatePartialsPerson {
 
     public void updatePartialsPerson(Person person) {
         logger.info(String.format("%s - %s", new Date().toString(), "update a person"));
+
+        personRepository.findById(person.getId())
+                .orElseThrow(() -> new ObjectNotFoundException("person not found"));
+
         checkDuplicatedPerson(person);
 
         String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
