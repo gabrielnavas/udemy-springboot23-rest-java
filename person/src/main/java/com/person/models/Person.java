@@ -24,7 +24,7 @@ public class Person {
     @Column(nullable = false, unique = true, length = 20)
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private Date birthday;
 
     @Column(nullable = false, length = 100)
