@@ -1,5 +1,6 @@
 package com.person.controllers;
 
+import com.person.controllers.hateoas.WithRel;
 import com.person.dtos.RequestCreateUpdatePartialsPersonDto;
 import com.person.dtos.ResponsePersonDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
@@ -56,7 +57,7 @@ public class PersonController {
     public ResponseEntity<Object> createPerson(
             @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
     ) {
-        if (!bodyDto.password().equals(bodyDto.passwordConfirmation())) {
+        if (!bodyDto.getPassword().equals(bodyDto.getPasswordConfirmation())) {
             throw new PasswordAndPasswordConfirmationException();
         }
 
@@ -65,6 +66,9 @@ public class PersonController {
 
         person = createUpdatePartialsPerson.create(person);
         ResponsePersonDto responsePersonDto = toResponseBody(person);
+
+        setHateoas(responsePersonDto, person.getId(), 0, 10, null, WithRel.CREATE_PERSON);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonDto);
     }
 
@@ -81,8 +85,7 @@ public class PersonController {
         Person person = getPersonById.execute(personId);
         ResponsePersonDto responsePersonDto = toResponseBody(person);
 
-        // add the hateoas
-        responsePersonDto.add(linkTo(methodOn(PersonController.class).getByIdPerson(personId)).withSelfRel());
+        setHateoas(responsePersonDto, personId, 0, 10, null, WithRel.GET_PERSON_BY_ID);
 
         return ResponseEntity.status(HttpStatus.OK).body(responsePersonDto);
     }
@@ -100,6 +103,8 @@ public class PersonController {
     ) {
         Page<Person> personsPages = getAllPersons.execute(pageable);
         Collection<ResponsePersonDto> responseBody = toResponseListBody(personsPages.stream().toList());
+
+        setListHateoas(responseBody, 0, 10, null, WithRel.GET_ALL_PERSONS);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
@@ -127,7 +132,7 @@ public class PersonController {
             @PathVariable("personId") UUID personId,
             @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
     ) {
-        if (!bodyDto.password().equals(bodyDto.passwordConfirmation())) {
+        if (!bodyDto.getPassword().equals(bodyDto.getPasswordConfirmation())) {
             throw new PasswordAndPasswordConfirmationException();
         }
 
@@ -136,6 +141,51 @@ public class PersonController {
         BeanUtils.copyProperties(bodyDto, person);
         createUpdatePartialsPerson.updatePartialsPerson(person);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    private void setHateoas(ResponsePersonDto dto, UUID personId, int page, int pageSize, Pageable pageable, WithRel withRel) {
+        dto.add(
+                linkTo(methodOn(PersonController.class).createPerson(new RequestCreateUpdatePartialsPersonDto())).withRel(
+                        withRel.equals(WithRel.CREATE_PERSON)
+                                ? WithRel.SELF.getDescription()
+                                : WithRel.CREATE_PERSON.getDescription()
+                )
+        );
+        dto.add(
+                linkTo(methodOn(PersonController.class).updatePartialsPerson(personId, new RequestCreateUpdatePartialsPersonDto())).withRel(
+                        withRel.equals(WithRel.UPDATE_PARTIALS_PERSON)
+                                ? WithRel.SELF.getDescription()
+                                : WithRel.UPDATE_PARTIALS_PERSON.getDescription()
+                )
+        );
+        dto.add(
+                linkTo(methodOn(PersonController.class).getAllPersons(page, pageSize, pageable)).withRel(
+                        withRel.equals(WithRel.GET_ALL_PERSONS)
+                                ? WithRel.SELF.getDescription()
+                                : WithRel.GET_ALL_PERSONS.getDescription()
+                )
+        );
+        dto.add(
+                linkTo(methodOn(PersonController.class).getByIdPerson(personId)).withRel(
+                        withRel.equals(WithRel.GET_PERSON_BY_ID)
+                                ? WithRel.SELF.getDescription()
+                                : WithRel.GET_PERSON_BY_ID.getDescription()
+                )
+        );
+        dto.add(
+                linkTo(methodOn(PersonController.class).deletePerson(personId)).withRel(
+                        withRel.equals(WithRel.DELETE_PERSON_BY_ID)
+                                ? WithRel.SELF.getDescription()
+                                : WithRel.DELETE_PERSON_BY_ID.getDescription()
+                )
+        );
+    }
+
+
+    private void setListHateoas(Collection<ResponsePersonDto> responsePersonDtoList, int page, int pageSize, Pageable pageable, WithRel withRel) {
+        for (var dto : responsePersonDtoList) {
+            setHateoas(dto, UUID.fromString(dto.getKey()), page, pageSize, pageable, withRel);
+        }
     }
 
     private Collection<ResponsePersonDto> toResponseListBody(Collection<Person> persons) {
