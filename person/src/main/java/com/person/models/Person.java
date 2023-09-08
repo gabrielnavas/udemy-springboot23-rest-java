@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -22,6 +23,10 @@ public class Person {
     private String lastname;
     @Column(nullable = false, unique = true, length = 20)
     private String username;
+
+    @Column(nullable = false)
+    private Date birthday;
+
     @Column(nullable = false, length = 100)
     private String password;
     @Column(nullable = false, unique = true)
@@ -111,6 +116,14 @@ public class Person {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     @Override

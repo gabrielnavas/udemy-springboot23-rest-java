@@ -1,7 +1,7 @@
 package com.person.controllers;
 
-import com.person.controllers.dtos.v1.CreateUpdatePartialsPersonDto;
-import com.person.controllers.dtos.v1.ResponsePersonBodyDto;
+import com.person.controllers.dtos.CreateUpdatePartialsPersonDto;
+import com.person.controllers.dtos.ResponsePersonBodyDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;
@@ -40,7 +40,7 @@ public class PersonController {
     private DeletePerson deletePerson;
 
 
-    @PostMapping(value = "/v1", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createPerson(
             @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
     ) {
@@ -56,7 +56,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonBodyDto);
     }
 
-    @GetMapping(value = "/v1/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getByIdPerson(
             @PathVariable("personId") UUID personId
     ) {
@@ -65,7 +65,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePersonBodyDto);
     }
 
-    @GetMapping(value = "/v1", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllPersons(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -77,7 +77,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
-    @DeleteMapping(value = "/v1/{personId}")
+    @DeleteMapping(value = "/{personId}")
     public ResponseEntity<Object> deletePerson(
             @PathVariable("personId") UUID personId
     ) {
@@ -85,7 +85,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PatchMapping(value = "/v1/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updatePartialsPerson(
             @PathVariable("personId") UUID personId,
             @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
@@ -101,7 +101,6 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
     private Collection<ResponsePersonBodyDto> toResponseListBody(Collection<Person> persons) {
         List<ResponsePersonBodyDto> responseBody = new ArrayList<>();
         for (Person person : persons) {
@@ -115,6 +114,7 @@ public class PersonController {
                 person.getId().toString(),
                 person.getFirstname(),
                 person.getLastname(),
+                person.getBirthday(),
                 person.getUsername(),
                 person.getEmail(),
                 person.getCreatedAt(),

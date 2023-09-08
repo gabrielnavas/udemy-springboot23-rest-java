@@ -1,8 +1,10 @@
-package com.person.controllers.dtos.v1;
+package com.person.controllers.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.Date;
 
 public record CreateUpdatePartialsPersonDto(
 
@@ -13,6 +15,8 @@ public record CreateUpdatePartialsPersonDto(
         @Length(min = 1, max = 25)
         @NotNull
         String lastname,
+
+        Date birthday,
 
         @Length(min = 1, max = 25)
         @NotNull
