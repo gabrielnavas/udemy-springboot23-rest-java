@@ -1,7 +1,7 @@
 package com.person.controllers;
 
-import com.person.controllers.dtos.RequestCreateUpdatePartialsPersonDto;
-import com.person.controllers.dtos.ResponsePersonDto;
+import com.person.dtos.RequestCreateUpdatePartialsPersonDto;
+import com.person.dtos.ResponsePersonDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;

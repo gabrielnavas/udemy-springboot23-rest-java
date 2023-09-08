@@ -1,4 +1,4 @@
-package com.person.controllers.dtos;
+package com.person.dtos;
 
 import java.time.LocalDateTime;
 import java.util.Date;
