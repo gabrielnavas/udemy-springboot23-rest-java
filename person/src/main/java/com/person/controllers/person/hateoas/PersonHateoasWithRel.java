@@ -1,6 +1,6 @@
-package com.person.controllers.hateoas;
+package com.person.controllers.person.hateoas;
 
-public enum WithRel {
+public enum PersonHateoasWithRel {
     CREATE_PERSON("create new person"),
     UPDATE_PARTIALS_PERSON("update partials person"),
     GET_PERSON_BY_ID("get person by id"),
@@ -10,7 +10,7 @@ public enum WithRel {
 
     private String description;
 
-    WithRel(String description) {
+    PersonHateoasWithRel(String description) {
         this.description = description;
     }
 
