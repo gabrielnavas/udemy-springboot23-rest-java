@@ -6,6 +6,12 @@ import com.person.controllers.person.helpers.PersonToDto;
 import com.person.dtos.ResponsePersonDto;
 import com.person.models.Person;
 import com.person.services.GetAllPersons;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +27,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping(value = "/api/person/v1")
+@Tag(name = "People", description = "Endpoints for Managing People")
 public class GetAllPersonsController {
     @Autowired
     private GetAllPersons getAllPersons;
@@ -29,6 +36,19 @@ public class GetAllPersonsController {
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE
+            }
+    )
+    @Operation(summary = "finds all people", description = "finds all people",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = ResponsePersonDto.class))
+                            )
+                    }),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     public ResponseEntity<Object> execute(
