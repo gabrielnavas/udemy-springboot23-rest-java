@@ -1,5 +1,6 @@
 package com.person.controllers.book;
 
+import com.person.controllers.book.helpers.BookToDto;
 import com.person.controllers.book.responses.ResponseBook;
 import com.person.dtos.CreateBookDto;
 import com.person.models.Book;
@@ -11,24 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-
-class BookToDto {
-    public static ResponseBook toResponseBook(Book book) {
-        return new ResponseBook(
-                book.getId(),
-                book.getTitle(),
-                book.getAuthor(),
-                book.getPrice(),
-                book.getLaunchData()
-        );
-    }
-
-    public static List<ResponseBook> toResponseListBook(List<Book> books) {
-        return books.stream().map(BookToDto::toResponseBook).toList();
-    }
-}
 
 @RestController
 @RequestMapping("/api/book/v1")
