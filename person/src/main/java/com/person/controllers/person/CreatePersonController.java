@@ -11,6 +11,11 @@ import com.person.services.CreateUpdatePartialsPerson;
 import com.person.services.DeletePerson;
 import com.person.services.GetAllPersons;
 import com.person.services.GetPersonById;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/person/v1")
+@Tag(name = "People", description = "Endpoints for Managing People")
 public class CreatePersonController {
 
     @Autowired
@@ -47,6 +53,16 @@ public class CreatePersonController {
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE
+            }
+    )
+    @Operation(summary = "create a people", description = "create a people by passing in JSON or XML representation of the person",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "Created", responseCode = "201", content = @Content(
+                            schema = @Schema(implementation = ResponsePersonDto.class)
+                    )),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     public ResponseEntity<Object> execute(
