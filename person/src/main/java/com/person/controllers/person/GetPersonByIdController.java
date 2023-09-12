@@ -6,6 +6,11 @@ import com.person.controllers.person.helpers.PersonToDto;
 import com.person.dtos.ResponsePersonDto;
 import com.person.models.Person;
 import com.person.services.GetPersonById;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/person/v1")
+@Tag(name = "People", description = "Endpoints for Managing People")
 public class GetPersonByIdController {
     @Autowired
     private GetPersonById getPersonById;
@@ -28,6 +34,20 @@ public class GetPersonByIdController {
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE
+            }
+    )
+    @Operation(summary = "find a people", description = "find a people",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ResponsePersonDto.class)
+                            )
+                    }),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     public ResponseEntity<Object> execute(
