@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/person/v1")
+@RequestMapping(value = "/api/person/v1")
 public class CreatePersonController {
 
     @Autowired

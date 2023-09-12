@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/person/v1")
+@RequestMapping(value = "/api/person/v1")
 public class DeletePersonByIdController {
     @Autowired
     private DeletePerson deletePerson;
