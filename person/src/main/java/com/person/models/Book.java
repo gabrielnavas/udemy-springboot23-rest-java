@@ -24,6 +24,10 @@ public class Book {
     @Column(name = "launch_date")
     Date launchData;
 
+    public Book() {
+        this(UUID.randomUUID(), "", "", 0.0, new Date());
+    }
+
     public Book(UUID id, String title, String author, Double price, Date launchData) {
         this.id = id;
         this.title = title;
