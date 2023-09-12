@@ -8,3 +8,8 @@ spring:
       #      ddl-auto: update
       ddl-auto: none
     show-sql: true
+
+spring-doc:
+  pathsToMatch: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true
