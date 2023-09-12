@@ -32,7 +32,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler({
             PasswordAndPasswordConfirmationException.class,
-            ObjectNotFoundException.class
     })
     public final ResponseEntity<ExceptionResponse> handlePasswordAndPasswordConfirmationExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
@@ -41,5 +40,17 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({
+            ObjectNotFoundException.class
+    })
+    public final ResponseEntity<ExceptionResponse> handleObjectNotFoundExceptions(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 }
