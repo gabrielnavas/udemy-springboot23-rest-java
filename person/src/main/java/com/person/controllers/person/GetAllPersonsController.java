@@ -3,7 +3,7 @@ package com.person.controllers.person;
 import com.person.controllers.person.hateoas.PersonHateoasWithRel;
 import com.person.controllers.person.hateoas.PersonMapperHateoas;
 import com.person.controllers.person.helpers.PersonToDto;
-import com.person.dtos.ResponsePersonDto;
+import com.person.controllers.person.responses.ResponsePerson;
 import com.person.models.Person;
 import com.person.services.GetAllPersons;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +44,7 @@ public class GetAllPersonsController {
                     @ApiResponse(description = "Success", responseCode = "200", content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = ResponsePersonDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ResponsePerson.class))
                             )
                     }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -57,7 +57,7 @@ public class GetAllPersonsController {
             Pageable pageable
     ) {
         Page<Person> personsPages = getAllPersons.execute(pageable);
-        Collection<ResponsePersonDto> responseBody = PersonToDto.toResponseListBody(personsPages.stream().toList());
+        Collection<ResponsePerson> responseBody = PersonToDto.toResponseListBody(personsPages.stream().toList());
 
         PersonMapperHateoas.setList(responseBody, 0, 10, null, PersonHateoasWithRel.GET_ALL_PERSONS);
 

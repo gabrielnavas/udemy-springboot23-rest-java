@@ -1,4 +1,4 @@
-package com.person.dtos;
+package com.person.controllers.person.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "firstname", "lastname", "username", "birthday", "email", "createdAt", "updatedAt"})
-public class ResponsePersonDto extends RepresentationModel<ResponsePersonDto> {
+public class ResponsePerson extends RepresentationModel<ResponsePerson> {
     @JsonProperty(value = "id")
     private String key;
 
@@ -25,7 +25,7 @@ public class ResponsePersonDto extends RepresentationModel<ResponsePersonDto> {
     @JsonProperty(value = "updated_at")
     private LocalDateTime updatedAt;
 
-    public ResponsePersonDto(String key, String firstname, String lastname, Date birthday, String username, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ResponsePerson(String key, String firstname, String lastname, Date birthday, String username, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super();
         this.key = key;
         this.firstname = firstname;
@@ -107,7 +107,7 @@ public class ResponsePersonDto extends RepresentationModel<ResponsePersonDto> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        ResponsePersonDto that = (ResponsePersonDto) o;
+        ResponsePerson that = (ResponsePerson) o;
         return Objects.equals(key, that.key) && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(birthday, that.birthday) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
     }
 

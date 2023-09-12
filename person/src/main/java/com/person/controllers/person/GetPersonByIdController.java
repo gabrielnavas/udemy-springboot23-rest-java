@@ -3,7 +3,7 @@ package com.person.controllers.person;
 import com.person.controllers.person.hateoas.PersonHateoasWithRel;
 import com.person.controllers.person.hateoas.PersonMapperHateoas;
 import com.person.controllers.person.helpers.PersonToDto;
-import com.person.dtos.ResponsePersonDto;
+import com.person.controllers.person.responses.ResponsePerson;
 import com.person.models.Person;
 import com.person.services.GetPersonById;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +42,7 @@ public class GetPersonByIdController {
                     @ApiResponse(description = "Success", responseCode = "200", content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ResponsePersonDto.class)
+                                    schema = @Schema(implementation = ResponsePerson.class)
                             )
                     }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -54,10 +54,10 @@ public class GetPersonByIdController {
             @PathVariable("personId") UUID personId
     ) {
         Person person = getPersonById.execute(personId);
-        ResponsePersonDto responsePersonDto = PersonToDto.toResponseBody(person);
+        ResponsePerson responsePerson = PersonToDto.toResponseBody(person);
 
-        PersonMapperHateoas.set(responsePersonDto, personId, 0, 10, null, PersonHateoasWithRel.GET_PERSON_BY_ID);
+        PersonMapperHateoas.set(responsePerson, personId, 0, 10, null, PersonHateoasWithRel.GET_PERSON_BY_ID);
 
-        return ResponseEntity.status(HttpStatus.OK).body(responsePersonDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePerson);
     }
 }

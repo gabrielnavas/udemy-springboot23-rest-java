@@ -1,6 +1,6 @@
 package com.person.controllers.person;
 
-import com.person.dtos.RequestCreateUpdatePartialsPersonDto;
+import com.person.dtos.CreateUpdatePartialsPersonDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;
@@ -48,7 +48,7 @@ public class UpdatePartialsPersonController {
     )
     public ResponseEntity<Object> execute(
             @PathVariable("personId") UUID personId,
-            @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
+            @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
     ) {
         if (!bodyDto.getPassword().equals(bodyDto.getPasswordConfirmation())) {
             throw new PasswordAndPasswordConfirmationException();

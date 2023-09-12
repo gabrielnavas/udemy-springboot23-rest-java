@@ -3,8 +3,8 @@ package com.person.controllers.person;
 import com.person.controllers.person.hateoas.PersonHateoasWithRel;
 import com.person.controllers.person.hateoas.PersonMapperHateoas;
 import com.person.controllers.person.helpers.PersonToDto;
-import com.person.dtos.RequestCreateUpdatePartialsPersonDto;
-import com.person.dtos.ResponsePersonDto;
+import com.person.controllers.person.responses.ResponsePerson;
+import com.person.dtos.CreateUpdatePartialsPersonDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;
@@ -59,14 +59,14 @@ public class CreatePersonController {
             tags = {"People"},
             responses = {
                     @ApiResponse(description = "Created", responseCode = "201", content = @Content(
-                            schema = @Schema(implementation = ResponsePersonDto.class)
+                            schema = @Schema(implementation = ResponsePerson.class)
                     )),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     public ResponseEntity<Object> execute(
-            @RequestBody @Valid RequestCreateUpdatePartialsPersonDto bodyDto
+            @RequestBody @Valid CreateUpdatePartialsPersonDto bodyDto
     ) {
         if (!bodyDto.getPassword().equals(bodyDto.getPasswordConfirmation())) {
             throw new PasswordAndPasswordConfirmationException();
@@ -76,10 +76,10 @@ public class CreatePersonController {
         BeanUtils.copyProperties(bodyDto, person);
 
         person = createUpdatePartialsPerson.create(person);
-        ResponsePersonDto responsePersonDto = PersonToDto.toResponseBody(person);
+        ResponsePerson responsePerson = PersonToDto.toResponseBody(person);
 
-        PersonMapperHateoas.set(responsePersonDto, person.getId(), 0, 10, null, PersonHateoasWithRel.CREATE_PERSON);
+        PersonMapperHateoas.set(responsePerson, person.getId(), 0, 10, null, PersonHateoasWithRel.CREATE_PERSON);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responsePersonDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responsePerson);
     }
 }

@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import java.util.Objects;
 
-public class RequestCreateUpdatePartialsPersonDto {
+public class CreateUpdatePartialsPersonDto {
 
     @Length(min = 1, max = 50)
     @NotNull
@@ -39,11 +39,11 @@ public class RequestCreateUpdatePartialsPersonDto {
     @JsonProperty(value = "password_confirmation")
     String passwordConfirmation;
 
-    public RequestCreateUpdatePartialsPersonDto() {
+    public CreateUpdatePartialsPersonDto() {
         this("", "", new Date(), "", "", "", "");
     }
 
-    public RequestCreateUpdatePartialsPersonDto(String firstname, String lastname, Date birthday, String username, String email, String password, String passwordConfirmation) {
+    public CreateUpdatePartialsPersonDto(String firstname, String lastname, Date birthday, String username, String email, String password, String passwordConfirmation) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthday = birthday;
@@ -113,7 +113,7 @@ public class RequestCreateUpdatePartialsPersonDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RequestCreateUpdatePartialsPersonDto that = (RequestCreateUpdatePartialsPersonDto) o;
+        CreateUpdatePartialsPersonDto that = (CreateUpdatePartialsPersonDto) o;
         return Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(birthday, that.birthday) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(passwordConfirmation, that.passwordConfirmation);
     }
 

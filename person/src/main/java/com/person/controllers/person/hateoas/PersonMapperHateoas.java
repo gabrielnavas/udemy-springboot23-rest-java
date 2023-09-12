@@ -1,8 +1,8 @@
 package com.person.controllers.person.hateoas;
 
 import com.person.controllers.person.*;
-import com.person.dtos.RequestCreateUpdatePartialsPersonDto;
-import com.person.dtos.ResponsePersonDto;
+import com.person.controllers.person.responses.ResponsePerson;
+import com.person.dtos.CreateUpdatePartialsPersonDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
@@ -13,16 +13,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public class PersonMapperHateoas {
 
-    static public void set(ResponsePersonDto dto, UUID personId, int page, int pageSize, Pageable pageable, PersonHateoasWithRel withRel) {
+    static public void set(ResponsePerson dto, UUID personId, int page, int pageSize, Pageable pageable, PersonHateoasWithRel withRel) {
         dto.add(
-                linkTo(methodOn(CreatePersonController.class).execute(new RequestCreateUpdatePartialsPersonDto())).withRel(
+                linkTo(methodOn(CreatePersonController.class).execute(new CreateUpdatePartialsPersonDto())).withRel(
                         withRel.equals(PersonHateoasWithRel.CREATE_PERSON)
                                 ? PersonHateoasWithRel.SELF.getDescription()
                                 : PersonHateoasWithRel.CREATE_PERSON.getDescription()
                 )
         );
         dto.add(
-                linkTo(methodOn(UpdatePartialsPersonController.class).execute(personId, new RequestCreateUpdatePartialsPersonDto())).withRel(
+                linkTo(methodOn(UpdatePartialsPersonController.class).execute(personId, new CreateUpdatePartialsPersonDto())).withRel(
                         withRel.equals(PersonHateoasWithRel.UPDATE_PARTIALS_PERSON)
                                 ? PersonHateoasWithRel.SELF.getDescription()
                                 : PersonHateoasWithRel.UPDATE_PARTIALS_PERSON.getDescription()
@@ -52,8 +52,8 @@ public class PersonMapperHateoas {
     }
 
 
-    static public void setList(Collection<ResponsePersonDto> responsePersonDtoList, int page, int pageSize, Pageable pageable, PersonHateoasWithRel withRel) {
-        for (var dto : responsePersonDtoList) {
+    static public void setList(Collection<ResponsePerson> responsePersonList, int page, int pageSize, Pageable pageable, PersonHateoasWithRel withRel) {
+        for (var dto : responsePersonList) {
             set(dto, UUID.fromString(dto.getKey()), page, pageSize, pageable, withRel);
         }
     }
