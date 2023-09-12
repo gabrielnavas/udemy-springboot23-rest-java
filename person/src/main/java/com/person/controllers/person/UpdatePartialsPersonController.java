@@ -4,6 +4,10 @@ import com.person.dtos.RequestCreateUpdatePartialsPersonDto;
 import com.person.exceptions.PasswordAndPasswordConfirmationException;
 import com.person.models.Person;
 import com.person.services.CreateUpdatePartialsPerson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/person/v1")
+@Tag(name = "People", description = "Endpoints for Managing People")
 public class UpdatePartialsPersonController {
 
     @Autowired
@@ -30,6 +35,15 @@ public class UpdatePartialsPersonController {
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
+            }
+    )
+    @Operation(summary = "update partials people", description = "update partials people",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     public ResponseEntity<Object> execute(
