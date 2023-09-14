@@ -3,7 +3,6 @@ package com.person.controllers.person.hateoas;
 import com.person.controllers.person.*;
 import com.person.controllers.person.responses.ResponsePerson;
 import com.person.dtos.CreateUpdatePartialsPersonDto;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -13,7 +12,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public class PersonMapperHateoas {
 
-    static public void set(ResponsePerson dto, UUID personId, int page, int pageSize, Pageable pageable, PersonHateoasWithRel withRel) {
+    static public void set(ResponsePerson dto, UUID personId, int page, int pageSize, String[] sortsDefault, PersonHateoasWithRel withRel) {
         dto.add(
                 linkTo(methodOn(CreatePersonController.class).execute(new CreateUpdatePartialsPersonDto())).withRel(
                         withRel.equals(PersonHateoasWithRel.CREATE_PERSON)
@@ -29,7 +28,7 @@ public class PersonMapperHateoas {
                 )
         );
         dto.add(
-                linkTo(methodOn(GetAllPersonsController.class).execute(page, pageSize, pageable)).withRel(
+                linkTo(methodOn(GetAllPersonsController.class).execute(page, pageSize, sortsDefault)).withRel(
                         withRel.equals(PersonHateoasWithRel.GET_ALL_PERSONS)
                                 ? PersonHateoasWithRel.SELF.getDescription()
                                 : PersonHateoasWithRel.GET_ALL_PERSONS.getDescription()
@@ -52,9 +51,9 @@ public class PersonMapperHateoas {
     }
 
 
-    static public void setList(Collection<ResponsePerson> responsePersonList, int page, int pageSize, Pageable pageable, PersonHateoasWithRel withRel) {
+    static public void setList(Collection<ResponsePerson> responsePersonList, int page, int pageSize, String[] sortsDefault, PersonHateoasWithRel withRel) {
         for (var dto : responsePersonList) {
-            set(dto, UUID.fromString(dto.getKey()), page, pageSize, pageable, withRel);
+            set(dto, UUID.fromString(dto.getKey()), page, pageSize, sortsDefault, withRel);
         }
     }
 }
