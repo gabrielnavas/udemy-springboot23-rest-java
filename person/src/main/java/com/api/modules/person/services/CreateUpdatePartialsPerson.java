@@ -7,6 +7,7 @@ import com.api.modules.person.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -47,6 +48,7 @@ public class CreateUpdatePartialsPerson {
 
         String passwordHash = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(passwordHash);
+        person.setUpdateAt(LocalDateTime.now());
         personRepository.save(person);
     }
 
