@@ -5,8 +5,15 @@ import com.api.modules.book.controllers.helpers.BookToDto;
 import com.api.modules.book.controllers.responses.ResponseBook;
 import com.api.modules.book.models.Book;
 import com.api.modules.book.services.GetBookByIdService;
+import com.api.modules.person.controllers.responses.ResponsePerson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +25,32 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/book/v1")
+@Tag(name = "Book", description = "Endpoints for Managing Books")
 public class GetBookByIdController {
 
     @Autowired
     private GetBookByIdService getBookByIdService;
 
-    @GetMapping("{bookId}")
+    @GetMapping(
+            value="{bookId}",
+            produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
+    })
+    @Operation(summary = "find a people", description = "find a people",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ResponseBook.class)
+                            )
+                    }),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<Object> execute(
             @PathVariable("bookId") UUID bookId
     ) {
