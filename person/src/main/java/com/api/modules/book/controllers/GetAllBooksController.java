@@ -1,10 +1,11 @@
 package com.api.modules.book.controllers;
 
+import com.api.modules.book.controllers.hateoas.BookHateoasWithRel;
+import com.api.modules.book.controllers.hateoas.BookMapperHateoas;
 import com.api.modules.book.controllers.helpers.BookToDto;
 import com.api.modules.book.controllers.responses.ResponseBook;
 import com.api.modules.book.models.Book;
 import com.api.modules.book.services.GetAllBooksService;
-import com.api.modules.person.controllers.responses.ResponsePerson;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -55,6 +55,7 @@ public class GetAllBooksController {
     ) {
         List<Book> books = getAllBooksService.execute(pageable).stream().toList();
         List<ResponseBook> responseBooks = BookToDto.toResponseListBook(books);
+        BookMapperHateoas.setList(responseBooks, pageable, BookHateoasWithRel.GET_ALL_BOOKS);
         return ResponseEntity.status(HttpStatus.OK).body(responseBooks);
     }
 }

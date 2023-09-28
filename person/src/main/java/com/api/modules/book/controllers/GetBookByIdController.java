@@ -1,11 +1,12 @@
 package com.api.modules.book.controllers;
 
 import com.api.exceptions.ObjectNotFoundException;
+import com.api.modules.book.controllers.hateoas.BookHateoasWithRel;
+import com.api.modules.book.controllers.hateoas.BookMapperHateoas;
 import com.api.modules.book.controllers.helpers.BookToDto;
 import com.api.modules.book.controllers.responses.ResponseBook;
 import com.api.modules.book.models.Book;
 import com.api.modules.book.services.GetBookByIdService;
-import com.api.modules.person.controllers.responses.ResponsePerson;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,11 +33,11 @@ public class GetBookByIdController {
     private GetBookByIdService getBookByIdService;
 
     @GetMapping(
-            value="{bookId}",
+            value = "{bookId}",
             produces = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE
-    })
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE
+            })
     @Operation(summary = "find a people", description = "find a people",
             tags = {"People"},
             responses = {
@@ -54,11 +55,12 @@ public class GetBookByIdController {
     public ResponseEntity<Object> execute(
             @PathVariable("bookId") UUID bookId
     ) {
-        Optional<Book> optionalBook =  getBookByIdService.execute(bookId);
-        if(optionalBook.isEmpty()) {
+        Optional<Book> optionalBook = getBookByIdService.execute(bookId);
+        if (optionalBook.isEmpty()) {
             throw new ObjectNotFoundException("book not found");
         }
         ResponseBook bookResponse = BookToDto.toResponseBook(optionalBook.get());
+        BookMapperHateoas.set(bookResponse, BookHateoasWithRel.GET_BOOK_BY_ID);
         return ResponseEntity.status(HttpStatus.OK).body(bookResponse);
     }
 

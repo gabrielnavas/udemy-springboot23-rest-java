@@ -1,11 +1,12 @@
 package com.api.modules.book.controllers;
 
+import com.api.modules.book.controllers.hateoas.BookHateoasWithRel;
+import com.api.modules.book.controllers.hateoas.BookMapperHateoas;
 import com.api.modules.book.controllers.helpers.BookToDto;
 import com.api.modules.book.controllers.responses.ResponseBook;
-import com.api.modules.person.controllers.responses.ResponsePerson;
-import com.api.modules.person.dtos.CreateBookDto;
 import com.api.modules.book.models.Book;
 import com.api.modules.book.services.CreateBookPersonService;
+import com.api.modules.person.dtos.CreateBookDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,6 +54,7 @@ public class CreateBookController {
     ) {
         Book book = createBookPersonService.execute(dto);
         ResponseBook responseBookDto = BookToDto.toResponseBook(book);
+        BookMapperHateoas.set(responseBookDto, BookHateoasWithRel.CREATE_BOOK);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBookDto);
     }
 }

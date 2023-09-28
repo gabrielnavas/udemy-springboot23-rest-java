@@ -1,31 +1,39 @@
 package com.api.modules.book.controllers.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.springframework.hateoas.RepresentationModel;
+
 import java.util.Date;
 import java.util.UUID;
 
-public class ResponseBook {
+@JsonPropertyOrder({"id", "title", "author", "price", "launchDate"})
+public class ResponseBook extends RepresentationModel<ResponseBook> {
 
-    private UUID id;
+    @JsonProperty(value = "id")
+    private UUID key;
     private String title;
     private String author;
 
     private Double price;
+
+    @JsonProperty(value = "launch_date")
     private Date launchDate;
 
-    public ResponseBook(UUID id, String title, String author, Double price, Date launchDate) {
-        this.id = id;
+    public ResponseBook(UUID key, String title, String author, Double price, Date launchDate) {
+        this.key = key;
         this.title = title;
         this.author = author;
         this.price = price;
         this.launchDate = launchDate;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getKey() {
+        return key;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setKey(UUID key) {
+        this.key = key;
     }
 
     public String getTitle() {
