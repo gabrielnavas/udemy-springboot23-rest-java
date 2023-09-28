@@ -38,7 +38,7 @@ public class GetBookByIdController {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE
             })
-    @Operation(summary = "find a people", description = "find a people",
+    @Operation(summary = "find a book", description = "find a people",
             tags = {"People"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200", content = {
