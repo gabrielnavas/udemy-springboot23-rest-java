@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,17 +55,17 @@ public class GetAllPersonsController {
             }
     )
     public ResponseEntity<Object> execute(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-            @RequestParam(value = "sort", defaultValue = "lastname") String[] sortsDefault // TODO: como passar parametros escolhendo se é desc ou asc
+            @NotNull final Pageable pageable
+//            @RequestParam(value = "page", defaultValue = "0") int page,
+//            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+//            @RequestParam(value = "sort", defaultValue = "lastname") String[] sortsDefault // TODO: como passar parametros escolhendo se é desc ou asc
     ) {
-        Sort sort = Sort.by(sortsDefault);
-        Pageable pageable = PageRequest.of(page, pageSize, sort);
-
+//        Sort sort = Sort.by(sortsDefault);
+//        Pageable pageable = PageRequest.of(page, pageSize, sort);
         Page<Person> personsPages = getAllPersons.execute(pageable);
         Collection<ResponsePerson> responseBody = PersonToDto.toResponseListBody(personsPages.stream().toList());
 
-        PersonMapperHateoas.setList(responseBody, page, pageSize, sortsDefault, PersonHateoasWithRel.GET_ALL_PERSONS);
+        PersonMapperHateoas.setList(responseBody, pageable, PersonHateoasWithRel.GET_ALL_PERSONS);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }

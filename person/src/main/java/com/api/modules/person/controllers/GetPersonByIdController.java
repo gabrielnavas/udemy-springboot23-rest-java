@@ -56,7 +56,7 @@ public class GetPersonByIdController {
         Person person = getPersonById.execute(personId);
         ResponsePerson responsePerson = PersonToDto.toResponseBody(person);
 
-        PersonMapperHateoas.set(responsePerson, personId, 0, 10, null, PersonHateoasWithRel.GET_PERSON_BY_ID);
+        PersonMapperHateoas.set(responsePerson, personId, PersonHateoasWithRel.GET_PERSON_BY_ID);
 
         return ResponseEntity.status(HttpStatus.OK).body(responsePerson);
     }

@@ -78,7 +78,7 @@ public class CreatePersonController {
         person = createUpdatePartialsPerson.create(person);
         ResponsePerson responsePerson = PersonToDto.toResponseBody(person);
 
-        PersonMapperHateoas.set(responsePerson, person.getId(), 0, 10, null, PersonHateoasWithRel.CREATE_PERSON);
+        PersonMapperHateoas.set(responsePerson, person.getId(), PersonHateoasWithRel.CREATE_PERSON);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responsePerson);
     }
