@@ -56,12 +56,7 @@ public class GetAllPersonsController {
     )
     public ResponseEntity<Object> execute(
             @NotNull final Pageable pageable
-//            @RequestParam(value = "page", defaultValue = "0") int page,
-//            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-//            @RequestParam(value = "sort", defaultValue = "lastname") String[] sortsDefault // TODO: como passar parametros escolhendo se é desc ou asc
     ) {
-//        Sort sort = Sort.by(sortsDefault);
-//        Pageable pageable = PageRequest.of(page, pageSize, sort);
         Page<Person> personsPages = getAllPersons.execute(pageable);
         Collection<ResponsePerson> responseBody = PersonToDto.toResponseListBody(personsPages.stream().toList());
 
