@@ -282,6 +282,33 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
+    @Test
+    @Order(7)
+    void updatePartialsPersonByIdWithWrongOriginTest() {
+        CreateUpdatePartialsPersonRequest personToUpdate = createNewPersonRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(personToUpdate)
+                .pathParam("personId", responsePerson.getId())
+                .when()
+                .patch("{personId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
+
 
     @Test
     @Order(8)
