@@ -290,6 +290,34 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
+
+    @Test
+    @Order(7)
+    void deletePersonByIdWithWrongOriginTest() {
+        mockPerson();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        UUID personFakeId = UUID.randomUUID();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .pathParam("personId", personFakeId)
+                .when()
+                .delete("{personId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
+
     private void mockPerson() {
         String password = faker.internet().password();
         personFake.setFirstname(faker.name().firstName());
