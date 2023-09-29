@@ -1,9 +1,9 @@
 package com.api.modules.person.controllers;
 
+import com.api.modules.person.controllers.hateoas.PersonHateoasWithRel;
 import com.api.modules.person.controllers.hateoas.PersonMapperHateoas;
 import com.api.modules.person.controllers.helpers.PersonToDto;
 import com.api.modules.person.controllers.responses.ResponsePerson;
-import com.api.modules.person.controllers.hateoas.PersonHateoasWithRel;
 import com.api.modules.person.models.Person;
 import com.api.modules.person.services.GetPersonById;
 import io.swagger.v3.oas.annotations.Operation;
