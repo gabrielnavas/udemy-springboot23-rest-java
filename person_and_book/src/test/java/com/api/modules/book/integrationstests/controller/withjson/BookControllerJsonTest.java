@@ -90,6 +90,33 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(bookFake.getPrice(), responseBook.getPrice());
     }
 
+
+    @Test
+    @Order(2)
+    void createBookWithWrongOriginTest() throws IOException {
+        bookFake = createNewBookRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/book/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(bookFake)
+                .when()
+                .post()
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
+
     private CreateUpdatePartialsBookRequest createNewBookRequest() {
         CreateUpdatePartialsBookRequest bookFake = new CreateUpdatePartialsBookRequest();
         bookFake.setAuthor(faker.book().author());
