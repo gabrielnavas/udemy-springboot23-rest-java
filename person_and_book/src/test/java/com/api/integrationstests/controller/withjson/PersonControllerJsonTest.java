@@ -257,29 +257,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(7)
-    void deletePersonByIdTest() {
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
-                .setBasePath("/api/person/v1")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
-
-        Response response = given().spec(specification)
-                .accept(ContentType.JSON)
-                .pathParam("personId", responsePerson.getId())
-                .when()
-                .delete("{personId}")
-                .then()
-                .extract()
-                .response();
-
-        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
-    }
-
-    @Test
-    @Order(6)
     void updatePartialsPersonByIdTest() {
         CreateUpdatePartialsPersonRequest personToUpdate = createNewPersonRequest();
 
@@ -305,8 +282,32 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
+
     @Test
-    @Order(7)
+    @Order(8)
+    void deletePersonByIdTest() {
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .pathParam("personId", responsePerson.getId())
+                .when()
+                .delete("{personId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
+    }
+
+    @Test
+    @Order(9)
     void deletePersonByIdWithWrongOriginTest() {
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
