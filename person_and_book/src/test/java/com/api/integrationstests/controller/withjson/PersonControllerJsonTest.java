@@ -152,9 +152,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .extract()
                 .response();
 
-        ResponsePerson responsePersonFind = objectMapper.readValue(response.body().asString(), ResponsePerson.class);
-
         assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        ResponsePerson responsePersonFind = objectMapper.readValue(response.body().asString(), ResponsePerson.class);
 
         assertNotNull(responsePersonFind);
 
@@ -194,6 +194,60 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
                 .setBasePath(String.format("/api/person/v1/%s", personIdFake))
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .when()
+                .get()
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
+
+
+    @Test
+    @Order(3)
+    void findAllPersonsTest() throws IOException {
+        mockPerson();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .when()
+                .get()
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        ResponsePerson[] responsePersonsFind = objectMapper.readValue(response.body().asString(), ResponsePerson[].class);
+
+        assertTrue(responsePersonsFind.length > 0);
+    }
+
+
+    @Test
+    @Order(4)
+    void findAllPersonsWithWrongOrigin() throws IOException {
+        mockPerson();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
