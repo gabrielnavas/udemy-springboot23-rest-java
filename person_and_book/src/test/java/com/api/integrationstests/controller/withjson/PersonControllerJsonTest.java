@@ -19,6 +19,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationF
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
@@ -179,6 +180,33 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(responsePerson.getBirthday(), responsePersonFind.getBirthday());
         assertEquals(responsePerson.getFirstname(), responsePersonFind.getFirstname());
         assertEquals(responsePerson.getFirstname(), responsePersonFind.getFirstname());
+    }
+
+
+    @Test
+    @Order(3)
+    void findPersonByIdWithWrongOriginTest() throws IOException {
+        mockPerson();
+
+        UUID personIdFake = UUID.randomUUID();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath(String.format("/api/person/v1/%s", personIdFake))
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .when()
+                .get()
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
 
     private void mockPerson() {
