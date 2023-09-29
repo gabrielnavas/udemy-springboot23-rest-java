@@ -137,7 +137,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
-                .setBasePath(String.format("/api/person/v1/%s", responsePerson.getId()))
+                .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
@@ -145,8 +145,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
         Response response = given().spec(specification)
                 .accept(ContentType.JSON)
+                .pathParam("personId", responsePerson.getId())
                 .when()
-                .get()
+                .get("{personId}")
                 .then()
                 .extract()
                 .response();
