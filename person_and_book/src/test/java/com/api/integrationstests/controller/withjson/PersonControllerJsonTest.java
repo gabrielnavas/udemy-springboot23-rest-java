@@ -105,7 +105,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(2)
-    void createPersonWithWrongOriginTest() throws IOException {
+    void createPersonWithWrongOriginTest() {
         mockPerson();
 
         specification = new RequestSpecBuilder()
@@ -185,8 +185,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 
     @Test
-    @Order(3)
-    void findPersonByIdWithWrongOriginTest() throws IOException {
+    @Order(4)
+    void findPersonByIdWithWrongOriginTest() {
         mockPerson();
 
         UUID personIdFake = UUID.randomUUID();
@@ -212,7 +212,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 
     @Test
-    @Order(3)
+    @Order(5)
     void findAllPersonsTest() throws IOException {
         mockPerson();
 
@@ -241,8 +241,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 
     @Test
-    @Order(4)
-    void findAllPersonsWithWrongOrigin() throws IOException {
+    @Order(6)
+    void findAllPersonsWithWrongOrigin() {
         mockPerson();
 
         specification = new RequestSpecBuilder()
@@ -262,6 +262,32 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .response();
 
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
+
+
+    @Test
+    @Order(7)
+    void deletePersonByIdTest() {
+        mockPerson();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .pathParam("personId", responsePerson.getId())
+                .when()
+                .delete("{personId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
     private void mockPerson() {
