@@ -128,6 +128,59 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.FORBIDDEN.value(), response.statusCode());
     }
 
+
+    @Test
+    @Order(3)
+    void findPersonByIdTest() throws IOException {
+        mockPerson();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath(String.format("/api/person/v1/%s", responsePerson.getId()))
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .accept(ContentType.JSON)
+                .when()
+                .get()
+                .then()
+                .extract()
+                .response();
+
+        ResponsePerson responsePersonFind = objectMapper.readValue(response.body().asString(), ResponsePerson.class);
+
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        assertNotNull(responsePersonFind);
+
+        assertNotNull(responsePersonFind.getId());
+        assertNotNull(responsePersonFind.getFirstname());
+        assertNotNull(responsePersonFind.getLastname());
+        assertNotNull(responsePersonFind.getEmail());
+        assertNotNull(responsePersonFind.getUsername());
+        assertNotNull(responsePersonFind.getCreatedAt());
+        assertNotNull(responsePersonFind.getUpdatedAt());
+        assertNotNull(responsePersonFind.getBirthday());
+
+        assertTrue(responsePersonFind.getId().length() > 0);
+
+//        // TODO: verificar datas
+//        Date now = new Date();
+//        assertTrue(now.after(responsePerson.getCreatedAt()) || now.equals(responsePerson.getCreatedAt()));
+//        assertTrue(now.after(responsePerson.getUpdatedAt()) || now.equals(responsePerson.getUpdatedAt()));
+
+        assertEquals(responsePerson.getFirstname(), responsePersonFind.getFirstname());
+        assertEquals(responsePerson.getLastname(), responsePersonFind.getLastname());
+        assertEquals(responsePerson.getEmail(), responsePersonFind.getEmail());
+        assertEquals(responsePerson.getUsername(), responsePersonFind.getUsername());
+        assertEquals(responsePerson.getBirthday(), responsePersonFind.getBirthday());
+        assertEquals(responsePerson.getFirstname(), responsePersonFind.getFirstname());
+        assertEquals(responsePerson.getFirstname(), responsePersonFind.getFirstname());
+    }
+
     private void mockPerson() {
         String password = faker.internet().password();
         personFake.setFirstname(faker.name().firstName());
