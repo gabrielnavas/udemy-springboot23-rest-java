@@ -1,0 +1,14 @@
+server:
+  port: 8888
+
+spring:
+  jpa:
+    hibernate:
+      #      ddl-auto: update
+      ddl-auto: none
+    show-sql: true
+
+spring-doc:
+  pathsToMatch: /api/**/v1/**
+  swagger-ui:
+    path: /api/swagger-ui.html
