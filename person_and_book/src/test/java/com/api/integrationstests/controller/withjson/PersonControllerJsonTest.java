@@ -43,7 +43,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //disable fails of the attributes without on object deserialization
 
-        personFake = new CreateUpdatePartialsPersonRequest();
+        personFake = null;
         responsePerson = null;
         faker = new Faker();
     }
@@ -51,7 +51,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(1)
     void createPersonTest() throws IOException {
-        mockPerson();
+        personFake = createNewPersonRequest();
 
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
@@ -106,8 +106,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(2)
     void createPersonWithWrongOriginTest() {
-        mockPerson();
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
                 .setBasePath("/api/person/v1")
@@ -133,8 +131,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(3)
     void findPersonByIdTest() throws IOException {
-        mockPerson();
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
                 .setBasePath("/api/person/v1")
@@ -187,8 +183,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(4)
     void findPersonByIdWithWrongOriginTest() {
-        mockPerson();
-
         UUID personIdFake = UUID.randomUUID();
 
         specification = new RequestSpecBuilder()
@@ -214,8 +208,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(5)
     void findAllPersonsTest() throws IOException {
-        mockPerson();
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
                 .setBasePath("/api/person/v1")
@@ -243,8 +235,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(6)
     void findAllPersonsWithWrongOrigin() {
-        mockPerson();
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
                 .setBasePath("/api/person/v1")
@@ -268,8 +258,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(7)
     void deletePersonByIdTest() {
-        mockPerson();
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
                 .setBasePath("/api/person/v1")
@@ -290,12 +278,36 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
+    @Test
+    @Order(6)
+    void updatePartialsPersonByIdTest() {
+        CreateUpdatePartialsPersonRequest personToUpdate = createNewPersonRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(personToUpdate)
+                .pathParam("personId", responsePerson.getId())
+                .when()
+                .patch("{personId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
+    }
 
     @Test
     @Order(7)
     void deletePersonByIdWithWrongOriginTest() {
-        mockPerson();
-
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
                 .setBasePath("/api/person/v1")
@@ -318,7 +330,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
 
-    private void mockPerson() {
+    private CreateUpdatePartialsPersonRequest createNewPersonRequest() {
+        CreateUpdatePartialsPersonRequest personFake = new CreateUpdatePartialsPersonRequest();
         String password = faker.internet().password();
         personFake.setFirstname(faker.name().firstName());
         personFake.setLastname(faker.name().lastName());
@@ -327,5 +340,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         personFake.setPasswordConfirmation(password);
         personFake.setBirthday(faker.date().birthday());
         personFake.setUsername(faker.name().username());
+        return personFake;
     }
 }
