@@ -14,6 +14,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -52,7 +53,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         mockPerson();
 
         specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, "http://localhost:8080")
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
                 .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
@@ -70,6 +71,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .response();
 
         responsePerson = objectMapper.readValue(response.body().asString(), ResponsePerson.class);
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatusCode());
 
         assertNotNull(responsePerson);
 
@@ -96,6 +99,33 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(personFake.getBirthday(), responsePerson.getBirthday());
         assertEquals(personFake.getFirstname(), responsePerson.getFirstname());
         assertEquals(personFake.getFirstname(), responsePerson.getFirstname());
+    }
+
+
+    @Test
+    @Order(2)
+    void createPersonWithWrongOriginTest() throws IOException {
+        mockPerson();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(personFake)
+                .when()
+                .post()
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.statusCode());
     }
 
     private void mockPerson() {
