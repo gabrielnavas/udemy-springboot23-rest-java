@@ -93,7 +93,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(2)
-    void createBookWithWrongOriginTest() throws IOException {
+    void createBookWithWrongOriginTest() {
         bookFake = createNewBookRequest();
 
         specification = new RequestSpecBuilder()
@@ -116,6 +116,37 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
+
+
+    @Test
+    @Order(3)
+    void updatePartialsBookTest() throws IOException {
+        CreateUpdatePartialsBookRequest bookToUpdate = createNewBookRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/book/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .pathParam("bookId", responseBook.getId())
+                .body(bookToUpdate)
+                .when()
+                .patch("{bookId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
+    }
+
+
+    // TODO: should create test of the update, delete, get by id and get all books
 
     private CreateUpdatePartialsBookRequest createNewBookRequest() {
         CreateUpdatePartialsBookRequest bookFake = new CreateUpdatePartialsBookRequest();
