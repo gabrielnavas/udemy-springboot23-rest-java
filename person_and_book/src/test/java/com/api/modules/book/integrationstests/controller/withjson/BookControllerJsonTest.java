@@ -31,9 +31,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
 
     private static RequestSpecification specification;
-
     private static ObjectMapper objectMapper;
-
     private static CreateUpdatePartialsBookRequest bookFake;
     private static ResponseBook responseBook;
     private static Faker faker;
@@ -48,7 +46,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         responseBook = null;
         faker = new Faker();
     }
-
 
     @Test
     @Order(1)
@@ -91,7 +88,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(bookFake.getPrice(), responseBook.getPrice());
     }
 
-
     @Test
     @Order(2)
     void createBookWithWrongOriginTest() {
@@ -115,7 +111,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
-
 
     @Test
     @Order(3)
@@ -184,7 +179,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
 
-
     @Test
     @Order(5)
     void updatePartialsBookTest() throws IOException {
@@ -212,7 +206,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
-
     @Test
     @Order(6)
     void updatePartialsBookWithWrongOriginTest() throws IOException {
@@ -230,7 +223,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
         Response response = given().spec(specification)
                 .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .pathParam("bookId", bookFakeId)
                 .body(bookToUpdate)
                 .when()
@@ -241,7 +233,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
-
 
     @Test
     @Order(7)
@@ -255,8 +246,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
                 .build();
 
         Response response = given().spec(specification)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
                 .pathParam("bookId", responseBook.getId())
                 .when()
                 .delete("{bookId}")
@@ -267,8 +256,29 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
     }
 
+    @Test
+    @Order(7)
+    void deleteBookWithWrongOriginTest() {
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/book/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
 
-    // TODO: should create test of the delete and get all books
+        UUID bookFakeId = UUID.randomUUID();
+
+        Response response = given().spec(specification)
+                .pathParam("bookId", responseBook.getId())
+                .when()
+                .delete("{bookId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
 
     private CreateUpdatePartialsBookRequest createNewBookRequest() {
         CreateUpdatePartialsBookRequest bookFake = new CreateUpdatePartialsBookRequest();
