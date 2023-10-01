@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS public.tb_person (
+CREATE TABLE IF NOT EXISTS public.person (
 	id uuid NOT NULL,
 	created_at timestamp(6) NOT NULL,
 	email character varying(255) NOT NULL,

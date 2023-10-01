@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS  public.tb_book (
+CREATE TABLE IF NOT EXISTS  public.book (
     id UUID,
     title character varying(255) NOT NULL,
     author character varying(255) NOT NULL,
