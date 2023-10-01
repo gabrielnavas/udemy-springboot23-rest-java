@@ -19,6 +19,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationF
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -143,6 +144,36 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
                 .response();
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
+    }
+
+
+    @Test
+    @Order(4)
+    void updatePartialsBookWithWrongOriginTest() throws IOException {
+        CreateUpdatePartialsBookRequest bookToUpdate = createNewBookRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/book/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        UUID bookFakeId = UUID.randomUUID();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .pathParam("bookId", bookFakeId)
+                .body(bookToUpdate)
+                .when()
+                .patch("{bookId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
     }
 
 
