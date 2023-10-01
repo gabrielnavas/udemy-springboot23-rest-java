@@ -177,6 +177,51 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
     }
 
 
+    @Test
+    @Order(4)
+    void getBookByIdTest() throws IOException {
+        CreateUpdatePartialsBookRequest bookToUpdate = createNewBookRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/book/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .pathParam("bookId", responseBook.getId())
+                .body(bookToUpdate)
+                .when()
+                .get("{bookId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        ResponseBook responseBook = objectMapper.readValue(response.body().asString(), ResponseBook.class);
+
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+
+        assertNotNull(responseBook);
+
+        assertNotNull(responseBook.getId());
+        assertNotNull(responseBook.getAuthor());
+        assertNotNull(responseBook.getLaunchDate());
+        assertNotNull(responseBook.getTitle());
+        assertNotNull(responseBook.getPrice());
+
+        assertEquals(responseBook.getAuthor(), responseBook.getAuthor());
+        assertEquals(responseBook.getLaunchDate(), responseBook.getLaunchDate());
+        assertEquals(responseBook.getTitle(), responseBook.getTitle());
+        assertEquals(responseBook.getPrice(), responseBook.getPrice());
+    }
+
+
     // TODO: should create test of the update, delete, get by id and get all books
 
     private CreateUpdatePartialsBookRequest createNewBookRequest() {
