@@ -222,7 +222,37 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
     }
 
 
-    // TODO: should create test of the update, delete, get by id and get all books
+    @Test
+    @Order(4)
+    void getBookByIdWithWrongOriginTest() throws IOException {
+        CreateUpdatePartialsBookRequest bookToUpdate = createNewBookRequest();
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_WRONG)
+                .setBasePath("/api/book/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        UUID bookFakeId = UUID.randomUUID();
+
+        Response response = given().spec(specification)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .pathParam("bookId", bookFakeId)
+                .body(bookToUpdate)
+                .when()
+                .get("{bookId}")
+                .then()
+                .extract()
+                .response();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode());
+    }
+
+
+    // TODO: should create test of the delete and get all books
 
     private CreateUpdatePartialsBookRequest createNewBookRequest() {
         CreateUpdatePartialsBookRequest bookFake = new CreateUpdatePartialsBookRequest();
