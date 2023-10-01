@@ -1,4 +1,4 @@
-package com.api.modules.person.models;
+package com.api.modules.user.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
