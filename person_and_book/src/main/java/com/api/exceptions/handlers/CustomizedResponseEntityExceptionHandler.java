@@ -2,8 +2,8 @@ package com.api.exceptions.handlers;
 
 import com.api.exceptions.ObjectNotFoundException;
 import com.api.exceptions.responses.ExceptionResponse;
+import com.api.modules.auth.exceptions.InvalidJwtAuthenticationException;
 import com.api.modules.person.exceptions.PasswordAndPasswordConfirmationException;
-import com.api.modules.user.exceptions.InvalidJwtAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,6 +1,6 @@
-package com.api.modules.user.repositories;
+package com.api.modules.auth.repositories;
 
-import com.api.modules.user.models.User;
+import com.api.modules.auth.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

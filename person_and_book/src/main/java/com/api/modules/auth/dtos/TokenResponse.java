@@ -1,4 +1,4 @@
-package com.api.modules.user.dtos;
+package com.api.modules.auth.dtos;
 
 import java.util.Date;
 import java.util.Objects;

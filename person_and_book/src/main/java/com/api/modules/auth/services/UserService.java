@@ -1,8 +1,8 @@
-package com.api.modules.user.services;
+package com.api.modules.auth.services;
 
+import com.api.modules.auth.models.User;
+import com.api.modules.auth.repositories.UserRepositoryJpa;
 import com.api.modules.person.services.CreateUpdatePartialsPerson;
-import com.api.modules.user.models.User;
-import com.api.modules.user.repositories.UserRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
