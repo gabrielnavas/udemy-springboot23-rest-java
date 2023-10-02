@@ -19,4 +19,4 @@ spring:
 spring-doc:
   pathsToMatch: /api/**/v1/**
   swagger-ui:
-    path: /api/swagger-ui.html
+    path: /api-docs/swagger-ui.html
