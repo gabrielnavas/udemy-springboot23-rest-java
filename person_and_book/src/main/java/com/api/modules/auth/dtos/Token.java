@@ -3,7 +3,7 @@ package com.api.modules.auth.dtos;
 import java.util.Date;
 import java.util.Objects;
 
-public class TokenResponse {
+public class Token {
 
     private String username;
     private Boolean authenticated;
@@ -12,8 +12,8 @@ public class TokenResponse {
     private String accessToken;
     private String refreshToken;
 
-    public TokenResponse(String username, Boolean authenticated, Date created, Date expiration,
-                         String accessToken, String refreshToken) {
+    public Token(String username, Boolean authenticated, Date created, Date expiration,
+                 String accessToken, String refreshToken) {
         this.username = username;
         this.authenticated = authenticated;
         this.created = created;
@@ -22,7 +22,7 @@ public class TokenResponse {
         this.refreshToken = refreshToken;
     }
 
-    public TokenResponse() {
+    public Token() {
         this("", false, new Date(), new Date(), "", "");
     }
 
@@ -78,7 +78,7 @@ public class TokenResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TokenResponse that = (TokenResponse) o;
+        Token that = (Token) o;
         return Objects.equals(username, that.username) && Objects.equals(authenticated, that.authenticated) && Objects.equals(created, that.created) && Objects.equals(expiration, that.expiration) && Objects.equals(accessToken, that.accessToken) && Objects.equals(refreshToken, that.refreshToken);
     }
 
