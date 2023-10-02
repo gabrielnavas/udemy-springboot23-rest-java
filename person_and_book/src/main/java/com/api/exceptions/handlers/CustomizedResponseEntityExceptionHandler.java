@@ -1,9 +1,8 @@
 package com.api.exceptions.handlers;
 
 import com.api.exceptions.ObjectNotFoundException;
+import com.api.exceptions.PasswordAndPasswordConfirmationException;
 import com.api.exceptions.responses.ExceptionResponse;
-import com.api.modules.auth.exceptions.InvalidJwtAuthenticationException;
-import com.api.modules.person.exceptions.PasswordAndPasswordConfirmationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,7 +29,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     }
 
-
     @ExceptionHandler({
             PasswordAndPasswordConfirmationException.class,
     })
@@ -53,18 +51,5 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false)
         );
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-
-
-    @ExceptionHandler({
-            InvalidJwtAuthenticationException.class
-    })
-    public final ResponseEntity<ExceptionResponse> invalidJwtAuthenticationExceptionExceptions(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 }

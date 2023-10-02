@@ -14,7 +14,7 @@ public class SwaggerIntegrationTest extends AbstractIntegrationTest {
     @Test
     void shouldDisplaySwaggerUiPage() {
         String content = given()
-                .basePath("/api/swagger-ui.html")
+                .basePath("/swagger-ui/index.html")
                 .port(TestConfigs.SERVER_PORT)
                 .when()
                 .get()
